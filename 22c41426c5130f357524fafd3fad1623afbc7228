@@ -1,0 +1,29 @@
+README.md
+  a0edd1bfffdce2dd 1-207
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.7",
+  "base_commit_sha": "22c41426c5130f357524fafd3fad1623afbc7228",
+  "prompts": {
+    "a0edd1bfffdce2dd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8544e9cb-3957-41a8-86d2-6e383a28be19",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 207,
+      "total_deletions": 0,
+      "accepted_lines": 207,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "README.md": {
+          "additions": 207,
+          "accepted_lines": 207
+        }
+      }
+    }
+  }
+}
