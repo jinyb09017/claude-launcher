@@ -1,0 +1,108 @@
+const TRANSLATIONS = {
+  zh: {
+    header_subtitle: '局域网',
+    net_checking: '检测中', net_ok: '正常', net_warn: '无外网', net_bad: '断连',
+    net_banner_lan_down: '无法连接到 Mac，请检查局域网连接',
+    net_banner_inet_warn: 'Mac 当前无互联网连接，Claude 可能无法运行',
+    section_pinned: '📌 置顶',
+    section_other: '其他 工作空间',
+    section_all: '全部 工作空间',
+    guide_title: '使用方式',
+    guide_step1: '点击项目启动 Claude 会话',
+    guide_step2: '打开 Claude App → 底部 Code 标签',
+    guide_step3: '找到同名会话（绿点）点击连接',
+    btn_stop: '停止',
+    empty_loading: '加载中...',
+    empty_no_ws: '未找到工作空间',
+    empty_no_ws_hint: '目录需包含 CLAUDE.md 文件',
+    modal_running_desc: '该工作空间已有运行中的 Claude 会话，你想怎么处理？',
+    btn_reuse: '继续使用现有会话',
+    btn_new_session: '终止并新建会话',
+    btn_cancel: '取消',
+    toast_reuse: '前往 Claude App → Code 标签连接',
+    toast_stopped: '已停止',
+    toast_started: '已启动 → Claude App → Code 标签',
+    toast_net_offline: '网络已断开',
+    toast_net_restored: '网络已恢复',
+    settings_title: '设置',
+    settings_appearance: '外观',
+    settings_language: '语言',
+    settings_theme: '主题',
+    theme_light: '浅色', theme_dark: '深色', theme_auto: '跟随系统',
+    settings_workspace_section: '工作空间',
+    settings_scan_dir: '扫描目录',
+    settings_manage_ws: '管理工作空间',
+    settings_require_md: '仅显示 CLAUDE.md',
+    ws_panel_title: '工作空间管理',
+    ws_panel_hint: '置顶常用项目，隐藏不需要显示的目录',
+    btn_close: '关闭',
+    btn_pin: '置顶',
+    btn_hide: '隐藏',
+  },
+  en: {
+    header_subtitle: 'LAN',
+    net_checking: 'Checking', net_ok: 'OK', net_warn: 'No WAN', net_bad: 'Offline',
+    net_banner_lan_down: 'Cannot reach Mac — check LAN connection',
+    net_banner_inet_warn: 'Mac has no internet — Claude may not work',
+    section_pinned: '📌 Pinned',
+    section_other: 'Other Workspaces',
+    section_all: 'All Workspaces',
+    guide_title: 'How to use',
+    guide_step1: 'Tap a project to start a Claude session',
+    guide_step2: 'Open Claude App → Code tab at the bottom',
+    guide_step3: 'Find the session (green dot) and connect',
+    btn_stop: 'Stop',
+    empty_loading: 'Loading...',
+    empty_no_ws: 'No workspaces found',
+    empty_no_ws_hint: 'Directories must contain CLAUDE.md',
+    modal_running_desc: 'This workspace has a running Claude session.',
+    btn_reuse: 'Use existing session',
+    btn_new_session: 'Kill and restart',
+    btn_cancel: 'Cancel',
+    toast_reuse: 'Go to Claude App → Code tab',
+    toast_stopped: 'Stopped',
+    toast_started: 'Started → Claude App → Code tab',
+    toast_net_offline: 'Network offline',
+    toast_net_restored: 'Network restored',
+    settings_title: 'Settings',
+    settings_appearance: 'Appearance',
+    settings_language: 'Language',
+    settings_theme: 'Theme',
+    theme_light: 'Light', theme_dark: 'Dark', theme_auto: 'Auto',
+    settings_workspace_section: 'Workspace',
+    settings_scan_dir: 'Scan Directory',
+    settings_manage_ws: 'Manage Workspaces',
+    settings_require_md: 'Require CLAUDE.md',
+    ws_panel_title: 'Manage Workspaces',
+    ws_panel_hint: 'Pin frequent projects, hide others',
+    btn_close: 'Close',
+    btn_pin: 'Pin',
+    btn_hide: 'Hide',
+  },
+};
+
+// eslint-disable-next-line no-unused-vars
+let _lang = localStorage.getItem('launcher_lang') || 'zh';
+
+// eslint-disable-next-line no-unused-vars
+function t(key) {
+  return (TRANSLATIONS[_lang] || TRANSLATIONS.zh)[key] || key;
+}
+
+// eslint-disable-next-line no-unused-vars
+function setLang(lang) {
+  _lang = lang;
+  localStorage.setItem('launcher_lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+  if (typeof render === 'function') render();
+  if (typeof renderSheet === 'function') renderSheet();
+}
+
+document.addEventListener('DOMContentLoaded', applyLang);
