@@ -1,0 +1,75 @@
+docs/superpowers/specs/2026-05-21-settings-panel-design.md
+  1ef7c73c8fbc0c7c 1-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.7",
+  "base_commit_sha": "7ed3f971fdd9a12b88977d786aa3f905049a3160",
+  "prompts": {
+    "1ef7c73c8fbc0c7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "486488cf-12cd-4430-83cc-4290e3f16389",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 759,
+      "total_deletions": 0,
+      "accepted_lines": 755,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "docs/superpowers/specs/2026-05-21-settings-panel-design.md": {
+          "additions": 131,
+          "accepted_lines": 131
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server-info": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        "launcher.log": {
+          "additions": 82,
+          "accepted_lines": 80
+        },
+        ".superpowers/brainstorm/26728-1779371362/content/entry-point.html": {
+          "additions": 84,
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/interaction.html": {
+          "additions": 115,
+          "accepted_lines": 115
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server.pid": {
+          "additions": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/entry-point.html": {
+          "additions": 84,
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/final-design.html": {
+          "additions": 174,
+          "accepted_lines": 174
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server-info": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.pid": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server.log": {
+          "additions": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.log": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/float-menu.html": {
+          "additions": 83,
+          "accepted_lines": 83
+        }
+      }
+    }
+  }
+}
