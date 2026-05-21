@@ -1,0 +1,56 @@
+docs/superpowers/plans/2026-05-21-settings-refactor.md
+  1ef7c73c8fbc0c7c 1-1562
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.7",
+  "base_commit_sha": "9ead2cca4447a722fbd21f1119fe77b406f5f6aa",
+  "prompts": {
+    "1ef7c73c8fbc0c7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "486488cf-12cd-4430-83cc-4290e3f16389",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 1562,
+      "total_deletions": 0,
+      "accepted_lines": 72638,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".superpowers/brainstorm/34919-1779371851/state/server.log": {
+          "accepted_lines": 6
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/final-design.html": {
+          "accepted_lines": 174
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/interaction.html": {
+          "accepted_lines": 115
+        },
+        "launcher.log": {
+          "accepted_lines": 70528
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.pid": {
+          "accepted_lines": 1
+        },
+        "docs/superpowers/plans/2026-05-21-settings-refactor.md": {
+          "additions": 1562,
+          "accepted_lines": 1562
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server-info": {
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/26728-1779371362/content/entry-point.html": {
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/entry-point.html": {
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/float-menu.html": {
+          "accepted_lines": 83
+        }
+      }
+    }
+  }
+}
