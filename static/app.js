@@ -180,12 +180,12 @@ async function openWsPanel() {
   const data = await res.json();
   const cfg = data.config;
   const html = data.workspaces.map(w => {
-    const isPinned = cfg.pinned.includes(w.name);
+    const isPinned = cfg.pinned.includes(w.display_name);
     return `<div class="ws-item">
       <span class="ws-item-name">${escHTML(w.name)}</span>
       <div>
         <button class="tag-btn ${isPinned ? 'active-pin' : ''}"
-          data-action="pin" data-name="${escAttr(w.name)}">${t('btn_pin')}</button>
+          data-action="pin" data-name="${escAttr(w.display_name)}">${t('btn_pin')}</button>
       </div>
     </div>`;
   }).join('');

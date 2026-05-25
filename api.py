@@ -15,7 +15,7 @@ from workspace import (
     scan_claude_projects, get_project_sessions, get_session_messages,
     delete_session, delete_project_logs,
     start_session_by_path, _encode_path, _load_session_map,
-    _path_base, _decode_project_path, find_session_cwd,
+    _path_base, _decode_project_path, find_session_cwd, _display_name_for_path,
     count_jsonl_lines, read_new_jsonl_messages,
     find_tmux_session_for_project, send_to_tmux_session, wait_for_claude_ready,
 )
@@ -126,11 +126,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
         result = []
         for w in workspaces:
             base = _path_base(w["path"]) if w.get("path") else None
+            disp = _display_name_for_path(w["path"]) if w.get("path") else w["name"]
             result.append({
                 "name": w["name"],
+                "display_name": disp,
                 "path": w["path"],
                 "short_path": short_path(w["path"]),
-                "pinned": w["name"] in cfg.get("pinned", []),
+                "pinned": disp in cfg.get("pinned", []),
                 "running": bool(base and any(
                     s == base or s.startswith(base + '_')
                     for s in active_tmux
