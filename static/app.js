@@ -288,31 +288,31 @@ function _bindFavSwipe(container) {
   container.querySelectorAll('.project-swipe-wrap').forEach(wrap => {
     const card = wrap.querySelector('.project-card');
     const unpinBtn = wrap.querySelector('.project-unpin-btn');
-    let startX = 0, startY = 0, dragging = false, moved = false, swiping = false, verticalGesture = false;
+    let startX = 0, startY = 0, dragging = false, moved = false, lockDir = null;
 
     card.addEventListener('touchstart', e => {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      dragging = true; moved = false; swiping = false; verticalGesture = false;
+      dragging = true; moved = false; lockDir = null;
     }, { passive: true });
 
     card.addEventListener('touchmove', e => {
       if (!dragging) return;
       const dx = e.touches[0].clientX - startX;
       const dy = e.touches[0].clientY - startY;
-      moved = Math.abs(dx) > 4 || Math.abs(dy) > 4;
-      if (Math.abs(dy) > 10) verticalGesture = true;
-      if (verticalGesture) { _closeAllSwipeRows(); return; }
-      if (!swiping && (dx >= 0 || Math.abs(dx) < 72 || Math.abs(dy) > 8)) return;
-      swiping = true;
-    }, { passive: true });
+      const absX = Math.abs(dx), absY = Math.abs(dy);
+      moved = absX > 4 || absY > 4;
+      if (!lockDir && (absX > 5 || absY > 5)) lockDir = absX >= absY ? 'h' : 'v';
+      if (lockDir === 'v') { _closeAllSwipeRows(); return; }
+      if (lockDir === 'h') e.preventDefault();
+    }, { passive: false });
 
     card.addEventListener('touchend', e => {
       if (!dragging) return;
       dragging = false;
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-      if (swiping && !verticalGesture && Math.abs(dy) <= 8 && dx < -72) {
+      if (lockDir === 'h' && dx < -40) {
         if (swipedWrap && swipedWrap !== wrap) closeSwipe();
         card.classList.add('swiped-single');
         wrap.classList.add('swiped-open');
@@ -433,35 +433,31 @@ function _bindProjectSwipe(container) {
     const card = wrap.querySelector('.project-card');
     const delBtn = wrap.querySelector('.project-del-btn');
     const pinBtn = wrap.querySelector('.project-pin-btn');
-    let startX = 0, startY = 0, dragging = false, moved = false, swiping = false, verticalGesture = false;
+    let startX = 0, startY = 0, dragging = false, moved = false, lockDir = null;
 
     card.addEventListener('touchstart', e => {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      dragging = true; moved = false; swiping = false; verticalGesture = false;
+      dragging = true; moved = false; lockDir = null;
     }, { passive: true });
 
     card.addEventListener('touchmove', e => {
       if (!dragging) return;
       const dx = e.touches[0].clientX - startX;
       const dy = e.touches[0].clientY - startY;
-      const absX = Math.abs(dx);
-      const absY = Math.abs(dy);
+      const absX = Math.abs(dx), absY = Math.abs(dy);
       moved = absX > 4 || absY > 4;
-      if (absY > 10) verticalGesture = true;
-      if (verticalGesture) { _closeAllSwipeRows(); return; }
-      if (!swiping) {
-        if (dx >= 0 || absX < 72 || absY > 8) return;
-        swiping = true;
-      }
-    }, { passive: true });
+      if (!lockDir && (absX > 5 || absY > 5)) lockDir = absX >= absY ? 'h' : 'v';
+      if (lockDir === 'v') { _closeAllSwipeRows(); return; }
+      if (lockDir === 'h') e.preventDefault();
+    }, { passive: false });
 
     card.addEventListener('touchend', e => {
       if (!dragging) return;
       dragging = false;
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-      if (swiping && !verticalGesture && Math.abs(dy) <= 8 && dx < -72) {
+      if (lockDir === 'h' && dx < -40) {
         if (swipedWrap && swipedWrap !== wrap) closeSwipe();
         card.classList.add('swiped');
         wrap.classList.add('swiped-open');
@@ -673,36 +669,31 @@ function _bindSessSwipe(container) {
     const item = wrap.querySelector('.sess-item');
     const delBtn = wrap.querySelector('.sess-del-btn');
     const sid = wrap.dataset.id;
-    let startX = 0, startY = 0, dragging = false, moved = false, swiping = false, verticalGesture = false;
+    let startX = 0, startY = 0, dragging = false, moved = false, lockDir = null;
 
     item.addEventListener('touchstart', e => {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      dragging = true; moved = false; swiping = false; verticalGesture = false;
+      dragging = true; moved = false; lockDir = null;
     }, { passive: true });
 
     item.addEventListener('touchmove', e => {
       if (!dragging) return;
       const dx = e.touches[0].clientX - startX;
       const dy = e.touches[0].clientY - startY;
-      const absX = Math.abs(dx);
-      const absY = Math.abs(dy);
+      const absX = Math.abs(dx), absY = Math.abs(dy);
       moved = absX > 4 || absY > 4;
-      if (absY > 10) verticalGesture = true;
-      if (verticalGesture) { _closeAllSwipeRows(); return; }
-      if (!swiping) {
-        if (dx >= 0 || absX < 72 || absY > 8) return;
-        swiping = true;
-      }
-    }, { passive: true });
+      if (!lockDir && (absX > 5 || absY > 5)) lockDir = absX >= absY ? 'h' : 'v';
+      if (lockDir === 'v') { _closeAllSwipeRows(); return; }
+      if (lockDir === 'h') e.preventDefault();
+    }, { passive: false });
 
     item.addEventListener('touchend', e => {
       if (!dragging) return;
       dragging = false;
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-      if (swiping && !verticalGesture && Math.abs(dy) <= 8 && dx < -72) {
-        // Snap open: close any other open item first
+      if (lockDir === 'h' && dx < -40) {
         if (_swipedWrap && _swipedWrap !== wrap) _closeSwipe();
         item.classList.add('swiped');
         wrap.classList.add('swiped-open');
@@ -711,7 +702,6 @@ function _bindSessSwipe(container) {
         item.classList.remove('swiped');
         wrap.classList.remove('swiped-open');
         if (_swipedWrap === wrap) _swipedWrap = null;
-        // Only treat as tap if barely moved
         if (!_isListScrollCoolingDown() && (!moved || (Math.abs(dx) < 5 && Math.abs(dy) < 5))) {
           openMsgPanel(sid);
         }
