@@ -1,0 +1,570 @@
+tests/test_project_delete.py
+  d9270367b6e04dd9 1,6
+.gitignore
+  d9270367b6e04dd9 1,3-17
+tests/test_baseline.py
+  d9270367b6e04dd9 1-262
+README.md
+  d9270367b6e04dd9 85-91,99-105,470-474,515-519,527-533,544
+  67e244118c089510 17,42-43,54-61,64-67,70-71,73-76,116,119,136,141,159,162,167,173,175,178-179,181-183,185,187,190-196,199,201,203-214,217-227,229-230,232,234-241,245-246,250-281,283,285-306,309,326,330,341,343,347,373,375,381-383,385-386,388-390,392-395,398,400,404,434,491-492,500
+  51e2bf1d494f7138 1,3,7,9,11,13,15-16,18-19,21,23,26-41,44-53,62-63,68-69,72,77-84,92,108,110-114,117-118,120,122-132,134-135,137,144-158,160-161,163-164,169,171,177,197,307,311,313-325,331-333,335-337,339,345,349-371,378-379,384,387,391,401,406,408,410-426,428,430,432-433,435-446,448,450-453,455-459,465,467,478-489,493-495,497,499,501-505,507-509,511,513,523-524,526,539-543,545-552,554-558
+  e71c1b5462dde0e8 93-98,106-107,133,138-140,142-143
+tests/test_recon.py
+  d9270367b6e04dd9 1-25
+tests/test_sessions.py
+  d9270367b6e04dd9 1-208
+tests/test_resume.py
+  d9270367b6e04dd9 1-193
+config.example.json
+  d9270367b6e04dd9 2-3,5-12
+tests/test_chat.py
+  d9270367b6e04dd9 1-235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.7",
+  "base_commit_sha": "ec3bb98d9b491e05a76baa1144be3273bd2426af",
+  "prompts": {
+    "18fa99a4d0450ef3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bebf3af0-dfa4-4aa6-aac4-0c47b732ce52",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 17,
+      "total_deletions": 7,
+      "accepted_lines": 15,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/app.css": {
+          "additions": 13,
+          "deletions": 6,
+          "accepted_lines": 11
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 3,
+          "accepted_lines": 3
+        },
+        "static/index.html": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        }
+      }
+    },
+    "1b57a86a045dfb51": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e59bb-36fe-79f3-8364-abb922c631a3",
+        "model": "unknown"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "additions": 1,
+          "accepted_lines": 1
+        }
+      }
+    },
+    "1ef7c73c8fbc0c7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "486488cf-12cd-4430-83cc-4290e3f16389",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 72729,
+      "overriden_lines": 1,
+      "per_file_stats": {
+        "config.json": {
+          "accepted_lines": 5,
+          "overriden_lines": 1
+        },
+        "launcher.log": {
+          "accepted_lines": 72176
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/float-menu.html": {
+          "accepted_lines": 83
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/final-design.html": {
+          "accepted_lines": 174
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server-info": {
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.log": {
+          "accepted_lines": 6
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/entry-point.html": {
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.pid": {
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/26728-1779371362/content/entry-point.html": {
+          "accepted_lines": 84
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/interaction.html": {
+          "accepted_lines": 115
+        }
+      }
+    },
+    "300b688d610cbe80": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9b6e41eb-831d-419e-b01f-5e6269cff859",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 196,
+      "total_deletions": 46,
+      "accepted_lines": 158,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/app.css": {
+          "additions": 18,
+          "deletions": 3,
+          "accepted_lines": 18
+        },
+        "workspace.py": {
+          "additions": 15,
+          "deletions": 9,
+          "accepted_lines": 11
+        },
+        "api.py": {
+          "additions": 28,
+          "deletions": 8,
+          "accepted_lines": 19
+        },
+        "static/app.js": {
+          "additions": 135,
+          "deletions": 26,
+          "accepted_lines": 110
+        }
+      }
+    },
+    "3b039b59cc936c85": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e59bb-2224-7880-97b4-32d0f447bcae",
+        "model": "gpt-5.5"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 607,
+      "total_deletions": 112,
+      "accepted_lines": 556,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/app.css": {
+          "additions": 124,
+          "deletions": 35,
+          "accepted_lines": 108
+        },
+        "static/index.html": {
+          "additions": 2,
+          "deletions": 2,
+          "accepted_lines": 2
+        },
+        "static/app.js": {
+          "additions": 289,
+          "deletions": 73,
+          "accepted_lines": 254
+        },
+        "api.py": {
+          "additions": 28,
+          "deletions": 2,
+          "accepted_lines": 28
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 151,
+          "accepted_lines": 151
+        },
+        "workspace.py": {
+          "additions": 13,
+          "accepted_lines": 13
+        }
+      }
+    },
+    "4c1ca813cb29ae66": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e087eedb-ba35-49d9-b60d-94ef7d0b18ba",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 213,
+      "total_deletions": 16,
+      "accepted_lines": 15,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test_resume.py": {
+          "additions": 194,
+          "deletions": 1
+        },
+        "workspace.py": {
+          "additions": 9,
+          "deletions": 7,
+          "accepted_lines": 9
+        },
+        "static/app.js": {
+          "additions": 8,
+          "deletions": 8,
+          "accepted_lines": 4
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 2,
+          "accepted_lines": 2
+        }
+      }
+    },
+    "504bea4dbec2ab9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e1f5396b-631a-4b73-b210-39e22ec69859",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 557,
+      "total_deletions": 40,
+      "accepted_lines": 46,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/app.css": {
+          "additions": 4,
+          "accepted_lines": 2
+        },
+        "test_baseline.py": {
+          "additions": 297,
+          "deletions": 35
+        },
+        "test_sessions.py": {
+          "additions": 208
+        },
+        ".setting/mcp-mysql-cli.log": {
+          "additions": 11,
+          "accepted_lines": 11
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 7,
+          "accepted_lines": 7
+        },
+        "static/app.js": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        "api.py": {
+          "additions": 4,
+          "accepted_lines": 4
+        },
+        "workspace.py": {
+          "additions": 21,
+          "deletions": 4,
+          "accepted_lines": 21
+        }
+      }
+    },
+    "51e2bf1d494f7138": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b76f781-eacc-433a-935b-fd27a360bb24",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 2344,
+      "total_deletions": 446,
+      "accepted_lines": 1681,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test_recon.py": {
+          "additions": 51,
+          "deletions": 26
+        },
+        "api.py": {
+          "additions": 89,
+          "deletions": 46,
+          "accepted_lines": 44
+        },
+        "test_chat.py": {
+          "additions": 247,
+          "deletions": 12
+        },
+        "launcher.log": {
+          "additions": 880,
+          "accepted_lines": 880
+        },
+        ".setting/mcp-mysql-cli.log": {
+          "additions": 50,
+          "accepted_lines": 50
+        },
+        "server.py": {
+          "additions": 2,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 93,
+          "accepted_lines": 93
+        },
+        "static/app.js": {
+          "additions": 298,
+          "deletions": 135,
+          "accepted_lines": 161
+        },
+        "static/app.css": {
+          "additions": 69,
+          "accepted_lines": 63
+        },
+        "README.md": {
+          "additions": 380,
+          "deletions": 169,
+          "accepted_lines": 269
+        },
+        "workspace.py": {
+          "additions": 181,
+          "deletions": 57,
+          "accepted_lines": 116
+        },
+        "static/index.html": {
+          "additions": 4,
+          "accepted_lines": 4
+        }
+      }
+    },
+    "67e244118c089510": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d512e889-ab58-499d-85a2-d8195cd2fafd",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 763,
+      "total_deletions": 276,
+      "accepted_lines": 595,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "api.py": {
+          "additions": 30,
+          "deletions": 37,
+          "accepted_lines": 26
+        },
+        "server.py": {
+          "additions": 4,
+          "deletions": 2,
+          "accepted_lines": 3
+        },
+        "launcher.log": {
+          "additions": 208,
+          "accepted_lines": 194
+        },
+        "workspace.py": {
+          "additions": 298,
+          "deletions": 132,
+          "accepted_lines": 189
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "README.md": {
+          "additions": 221,
+          "deletions": 105,
+          "accepted_lines": 181
+        }
+      }
+    },
+    "69286a6ed9de6074": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d5a69d96-2ca5-4c4d-9ce4-431cce83a61b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 10,
+      "accepted_lines": 2,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "workspace.py": {
+          "additions": 10,
+          "deletions": 10,
+          "accepted_lines": 1
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 1,
+          "accepted_lines": 1
+        }
+      }
+    },
+    "b69cdc492a50c4d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bb2f1726-b8be-4b4f-9902-9376359f130f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 1901,
+      "total_deletions": 77,
+      "accepted_lines": 1012,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/i18n.js": {
+          "additions": 34,
+          "accepted_lines": 34
+        },
+        ".setting/mcp-mysql.log": {
+          "additions": 13,
+          "accepted_lines": 13
+        },
+        "mockup-session-discovery.html": {
+          "additions": 720
+        },
+        "static/index.html": {
+          "additions": 40,
+          "accepted_lines": 39
+        },
+        "launcher.log": {
+          "additions": 9,
+          "accepted_lines": 9
+        },
+        "api.py": {
+          "additions": 96,
+          "deletions": 17,
+          "accepted_lines": 54
+        },
+        ".setting/mcp-mysql-cli.log": {
+          "additions": 25,
+          "accepted_lines": 25
+        },
+        "workspace.py": {
+          "additions": 327,
+          "deletions": 30,
+          "accepted_lines": 276
+        },
+        "static/app.css": {
+          "additions": 252,
+          "deletions": 25,
+          "accepted_lines": 219
+        },
+        "static/app.js": {
+          "additions": 381,
+          "deletions": 5,
+          "accepted_lines": 339
+        },
+        ".playwright-mcp/console-2026-05-23T01-38-03-138Z.log": {
+          "additions": 4,
+          "accepted_lines": 4
+        }
+      }
+    },
+    "bf268de37a040f51": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b78841d4-0a15-43ec-a3d5-9e132f8bf8d1",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 0,
+      "accepted_lines": 16,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".claude/settings.json": {
+          "additions": 16,
+          "accepted_lines": 16
+        }
+      }
+    },
+    "d9270367b6e04dd9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4bf1fe0e-3d9c-4e83-a835-130580583fca",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 987,
+      "total_deletions": 8,
+      "accepted_lines": 987,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "tests/test_sessions.py": {
+          "additions": 208,
+          "accepted_lines": 208
+        },
+        "config.example.json": {
+          "additions": 13,
+          "accepted_lines": 13
+        },
+        "tests/test_resume.py": {
+          "additions": 193,
+          "accepted_lines": 193
+        },
+        "tests/test_recon.py": {
+          "additions": 25,
+          "accepted_lines": 25
+        },
+        "README.md": {
+          "additions": 33,
+          "deletions": 8,
+          "accepted_lines": 33
+        },
+        "tests/test_baseline.py": {
+          "additions": 262,
+          "accepted_lines": 262
+        },
+        "tests/test_project_delete.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "tests/test_chat.py": {
+          "additions": 235,
+          "accepted_lines": 235
+        },
+        ".gitignore": {
+          "additions": 16,
+          "accepted_lines": 16
+        }
+      }
+    },
+    "e71c1b5462dde0e8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c253b517-0145-4c27-9785-67467bea54f9",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 9,
+      "accepted_lines": 14,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "README.md": {
+          "additions": 14,
+          "deletions": 9,
+          "accepted_lines": 14
+        }
+      }
+    }
+  }
+}
