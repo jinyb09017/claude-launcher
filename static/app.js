@@ -435,6 +435,7 @@ function _bindProjectSwipe(container) {
   container.querySelectorAll('.project-swipe-wrap').forEach(wrap => {
     const card = wrap.querySelector('.project-card');
     const delBtn = wrap.querySelector('.project-del-btn');
+    const pinBtn = wrap.querySelector('.project-pin-btn');
     let startX = 0, startY = 0, dragging = false, moved = false, swiping = false, verticalGesture = false;
 
     card.addEventListener('touchstart', e => {
@@ -488,6 +489,17 @@ function _bindProjectSwipe(container) {
     });
 
     delBtn.addEventListener('click', () => _deleteProjectLogs(wrap, card.dataset.encoded));
+
+    pinBtn.addEventListener('click', async () => {
+      const encoded = card.dataset.encoded;
+      const proj = _projects.find(p => p.encoded === encoded);
+      if (!proj) return;
+      await post('/api/config/toggle', { key: 'pinned', name: proj.display_name });
+      proj.pinned = !proj.pinned;
+      if (_currentTab === 'all') renderProjects();
+      renderFavorites();
+      showToast(proj.pinned ? t('btn_favorite') : t('btn_unfavorite'), 'info');
+    });
   });
 
   container.addEventListener('touchstart', e => {
@@ -540,7 +552,10 @@ function projectCardHTML(p, q) {
   const age = _formatAge(p.last_mtime);
   const countClass = p.running ? 'session-count-badge running' : 'session-count-badge';
   return `<div class="project-swipe-wrap">
-    <button class="project-del-btn" data-encoded="${enc}">删除</button>
+    <div class="project-swipe-actions">
+      <button class="project-pin-btn" data-encoded="${enc}">${p.pinned ? '✓ ' + t('btn_favorite') : t('btn_favorite')}</button>
+      <button class="project-del-btn" data-encoded="${enc}">删除</button>
+    </div>
     <div class="card project-card" data-encoded="${enc}" data-path="${path}" data-display="${disp}">
       <div class="card-left">
         <div class="card-name">${nameDisplay}</div>
