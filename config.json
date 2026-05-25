@@ -1,7 +1,0 @@
-{
-  "scan_dir": "~/Documents/ai-claude",
-  "require_claude_md": true,
-  "port": 8765,
-  "pinned": ["question-explore", "overmind"],
-  "hidden": []
-}

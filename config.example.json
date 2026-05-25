@@ -1,0 +1,13 @@
+{
+  "scan_dir": "~/Documents",
+  "require_claude_md": false,
+  "port": 8765,
+  "pinned": [],
+  "hidden": [],
+  "claude_env": {
+    "HTTPS_PROXY": "",
+    "HTTP_PROXY": "",
+    "ALL_PROXY": "",
+    "NO_PROXY": "localhost,127.0.0.1,::1"
+  }
+}

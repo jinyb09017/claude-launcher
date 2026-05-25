@@ -1,1 +1,17 @@
+# Tool / IDE artifacts
 .superpowers/
+.playwright-mcp/
+.setting/
+.codex/
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Runtime
+launcher.log
+
+# User-specific config (copy config.example.json → config.json and edit locally)
+config.json
