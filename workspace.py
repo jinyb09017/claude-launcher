@@ -32,35 +32,6 @@ def _find_claude() -> str:
 CLAUDE_BIN = _find_claude()
 
 
-def scan_workspaces(cfg, include_hidden=False):
-    scan_dir = pathlib.Path(cfg["scan_dir"])
-    require_md = cfg.get("require_claude_md", True)
-    hidden = set(cfg.get("hidden", []))
-    pinned = cfg.get("pinned", [])
-
-    entries = []
-    if scan_dir.exists():
-        for d in sorted(scan_dir.iterdir()):
-            if not d.is_dir() or d.name.startswith("."):
-                continue
-            if not include_hidden and d.name in hidden:
-                continue
-            if require_md and not (d / "CLAUDE.md").exists():
-                continue
-            mtime = d.stat().st_mtime
-            entries.append({
-                "name": d.name,
-                "path": str(d),
-                "mtime": mtime,
-                "is_hidden": d.name in hidden,
-            })
-
-    entries.sort(key=lambda e: (
-        0 if e["name"] in pinned else 1,
-        pinned.index(e["name"]) if e["name"] in pinned else -e["mtime"]
-    ))
-    return entries
-
 
 def list_tmux_sessions():
     try:
@@ -75,9 +46,6 @@ def list_tmux_sessions():
 def session_name(dirname):
     return f"claude_{dirname}"
 
-
-def start_session(dirname, path):
-    start_session_by_path(path, None)
 
 
 def kill_session(path):

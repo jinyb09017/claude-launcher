@@ -1,4 +1,4 @@
-/* global t, setLang, openWsPanel */
+/* global t, setLang */
 
 // ── Tab state ──────────────────────────────────────────────────
 let _currentTab = 'favorites';
@@ -172,45 +172,6 @@ window.addEventListener('online', () => {
   checkNetwork();
   showToast(t('toast_net_restored'), 'info');
 });
-
-// ── Workspace manage panel ─────────────────────────────────────
-// eslint-disable-next-line no-unused-vars
-async function openWsPanel() {
-  const res = await fetch('/api/workspaces?all=1');
-  const data = await res.json();
-  const cfg = data.config;
-  const html = data.workspaces.map(w => {
-    const isPinned = cfg.pinned.includes(w.display_name);
-    return `<div class="ws-item">
-      <span class="ws-item-name">${escHTML(w.name)}</span>
-      <div>
-        <button class="tag-btn ${isPinned ? 'active-pin' : ''}"
-          data-action="pin" data-name="${escAttr(w.display_name)}">${t('btn_pin')}</button>
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('settings-list').innerHTML =
-    html || `<div style="color:var(--sub)">${t('empty_no_ws')}</div>`;
-  document.getElementById('settings-overlay').classList.add('show');
-}
-
-function closeWsPanel() {
-  document.getElementById('settings-overlay').classList.remove('show');
-  loadProjects();
-}
-
-// ── Modal + ws-panel wiring ────────────────────────────────────
-
-document.getElementById('settings-list').addEventListener('click', async e => {
-  const btn = e.target.closest('[data-action="pin"]');
-  if (!btn) return;
-  await post('/api/config/toggle', { key: 'pinned', name: btn.dataset.name });
-  openWsPanel();
-});
-
-document.getElementById('btn-close-settings').addEventListener('click', closeWsPanel);
-document.getElementById('settings-overlay').addEventListener('click',
-  e => { if (e.target.id === 'settings-overlay') closeWsPanel(); });
 
 // ── Utils ──────────────────────────────────────────────────────
 async function post(url, body) {
@@ -393,7 +354,7 @@ function renderProjects() {
   }
 
   if (!list.length) {
-    el.innerHTML = `<div class="empty">${q ? t('search_results') + ': 0' : t('empty_no_ws')}</div>`;
+    el.innerHTML = `<div class="empty">${q ? t('search_results') + ': 0' : t('empty_loading')}</div>`;
     return;
   }
 

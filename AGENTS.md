@@ -22,8 +22,6 @@ tail -f launcher.log
 ## 配置（config.json）
 
 - `pinned`: 置顶的项目名称列表
-- `hidden`: 隐藏的项目名称列表
-- `require_claude_md`: true = 只显示含 AGENTS.md 的目录
 - `port`: 监听端口，默认 8765
 
 ## 服务管理

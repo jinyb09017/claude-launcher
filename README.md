@@ -131,30 +131,27 @@ ThreadingHTTPServer(('0.0.0.0', port), Handler).serve_forever()
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/api/health` | 服务健康检查，附带网络连通性状态 |
-| GET | `/api/workspaces` | 扫描工作空间目录，附带 tmux 运行状态 |
 | GET | `/api/projects` | 读取 `~/.claude/projects/` 项目列表 |
 | GET | `/api/projects/sessions` | 列出某项目的历史会话及运行状态 |
 | GET | `/api/sessions/messages` | 解析某会话的消息内容 |
 | GET | `/api/sessions/live` | 拉取 JSONL 新增行（实时聊天轮询） |
 | POST | `/api/start` | 在 tmux 中启动 claude 会话（可恢复历史） |
-| POST | `/api/stop` | 杀掉指定工作空间的全部 tmux 会话 |
 | POST | `/api/chat` | 向运行中的 tmux 会话发送消息 |
 | POST | `/api/sessions/delete` | 删除指定会话的 JSONL 记录 |
 | POST | `/api/projects/delete` | 删除项目全部历史日志（运行中拒绝） |
-| POST | `/api/config/toggle` | 切换收藏 / 隐藏状态 |
-| POST | `/api/config` | 更新扫描目录、过滤规则等 |
+| POST | `/api/config/toggle` | 切换收藏状态 |
 | GET | `/static/*` | 返回前端静态资源 |
 
 配置读写使用 `threading.Lock` 保证多请求并发安全。
 
 ---
 
-### 3. 工作空间发现（workspace.py · scan_workspaces）
+### 3. 工作空间发现（workspace.py · scan_claude_projects）
 
-1. 读取 `config.json` 中的 `scan_dir`（默认 `~/Documents/ai-claude`）
-2. 列出所有一级子目录，排除 `.` 开头的隐藏目录
-3. 若 `require_claude_md: true`，跳过不含 `CLAUDE.md` 的目录
-4. **排序规则**：收藏项目（`pinned`）按列表顺序优先，其余按目录修改时间倒序
+扫描 `~/.claude/projects/` 下所有项目目录，每个目录对应一个 Claude CLI 管理的项目。
+
+- 按最近 session 修改时间倒序排列
+- **排序规则**：收藏项目（`pinned`）按列表顺序优先，其余按最近 session 时间倒序
 
 **运行状态检测**：通过 `tmux ls` 列出所有活跃 session，与 `_path_base(path)` 前缀比对：
 
@@ -236,7 +233,7 @@ Launcher 同时面对两套标识：
 
 #### 解法：map 是唯一事实来源
 
-Launcher 维护 `~/.claude/launcher_sessions.json`，作为所有运行状态判断的**唯一来源**。所有 API（`/api/workspaces`、`/api/projects`、`/api/projects/sessions`、`/api/start`）都只读这个文件，不再直接查询 tmux。
+Launcher 维护 `~/.claude/launcher_sessions.json`，作为所有运行状态判断的**唯一来源**。所有 API（`/api/projects`、`/api/projects/sessions`、`/api/start`）都只读这个文件，不再直接查询 tmux。
 
 Map 的结构有两种条目：
 
@@ -289,7 +286,7 @@ Map 的结构有两种条目：
   │
   ├─ tmux session 启动（tmux_name 已知，session_id 未知）
   │     └─ 监控线程（≤2s）→ 写入占位符 {tmux_name: tmux_name}
-  │         → 此后 /api/workspaces 可立即显示"运行中"
+  │         → 此后 /api/projects 可立即显示"运行中"
   │
   ├─ 用户发第一条消息
   │     → claude 写入 ~/.claude/projects/<encoded>/<session_id>.jsonl
@@ -508,7 +505,7 @@ CSS 自定义属性定义完整调色板，切换主题只需切换 `data-theme`
 ```bash
 # 1. 复制配置模板
 cp config.example.json config.json
-# 编辑 config.json，填写 scan_dir（工作空间根目录）及代理等参数
+# 编辑 config.json，填写代理等参数
 
 # 2. 注册 launchd 服务
 ./install.sh
@@ -559,11 +556,8 @@ cp config.example.json config.json
 
 ```json
 {
-  "scan_dir": "~/Documents/ai-claude",
-  "require_claude_md": false,
   "port": 8765,
   "pinned": ["ai-claude/my-project"],
-  "hidden": ["ai-claude/temp-project"],
   "claude_env": {
     "HTTPS_PROXY": "",
     "HTTP_PROXY": "",
@@ -575,11 +569,8 @@ cp config.example.json config.json
 
 | 字段 | 说明 |
 |------|------|
-| `scan_dir` | 扫描工作空间的根目录，支持 `~` |
-| `require_claude_md` | `true` 时只显示含 `CLAUDE.md` 的目录 |
 | `port` | 监听端口，默认 8765 |
-| `pinned` | 收藏的项目列表，格式为 `parent/child`（扫描目录末段 + 项目名），按列表顺序显示在收藏 Tab |
-| `hidden` | 隐藏的项目列表，同 `pinned` 格式，不在「全部」Tab 中显示 |
+| `pinned` | 收藏的项目列表，格式为 `parent/child`（路径最后两级），按列表顺序显示在收藏 Tab |
 | `claude_env` | 启动 claude 进程时注入的环境变量（如代理设置），留空则不注入 |
 
 收藏状态可通过在「全部」Tab 左滑项目直接操作，无需手动编辑 `config.json`。

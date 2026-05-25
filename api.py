@@ -10,11 +10,10 @@ from datetime import datetime
 from config import load_config, save_config
 from network import check_internet, get_local_ip
 from workspace import (
-    scan_workspaces,
-    start_session, kill_session, short_path,
+    start_session_by_path, kill_session, short_path,
     scan_claude_projects, get_project_sessions, get_session_messages,
     delete_session, delete_project_logs,
-    start_session_by_path, _encode_path, _load_session_map,
+    _encode_path, _load_session_map,
     _path_base, _decode_project_path, find_session_cwd, _display_name_for_path,
     count_jsonl_lines, read_new_jsonl_messages,
     find_tmux_session_for_project, send_to_tmux_session, wait_for_claude_ready,
@@ -56,9 +55,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._send(200, "application/json", _manifest(_ICON_DATA).encode())
         elif path == "/icon.png":
             self._send(200, "image/svg+xml", _ICON_SVG.encode())
-        elif path == "/api/workspaces":
-            include_all = query.get("all", ["0"])[0] == "1"
-            self._api_workspaces(include_all)
         elif path == "/api/health":
             self._api_health()
         elif path == "/api/projects":
@@ -83,12 +79,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         body = json.loads(self.rfile.read(length)) if length else {}
         if path == "/api/start":
             self._api_start(body)
-        elif path == "/api/stop":
-            self._api_stop(body)
         elif path == "/api/config/toggle":
             self._api_config_toggle(body)
-        elif path == "/api/config":
-            self._api_config_update(body)
         elif path == "/api/sessions/delete":
             self._api_session_delete(body)
         elif path == "/api/projects/delete":
@@ -115,36 +107,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def _api_health(self):
         data = json.dumps({"ok": True, "internet": check_internet()}).encode()
-        self._send(200, "application/json", data)
-
-    def _api_workspaces(self, include_all=False):
-        with _lock:
-            cfg = load_config()
-        workspaces = scan_workspaces(cfg, include_hidden=include_all)
-        active_tmux = set(_load_session_map().values())
-        ip = get_local_ip()
-        result = []
-        for w in workspaces:
-            base = _path_base(w["path"]) if w.get("path") else None
-            disp = _display_name_for_path(w["path"]) if w.get("path") else w["name"]
-            result.append({
-                "name": w["name"],
-                "display_name": disp,
-                "path": w["path"],
-                "short_path": short_path(w["path"]),
-                "pinned": disp in cfg.get("pinned", []),
-                "running": bool(base and any(
-                    s == base or s.startswith(base + '_')
-                    for s in active_tmux
-                )),
-                "is_hidden": w.get("is_hidden", False),
-            })
-        data = json.dumps({
-            "workspaces": result,
-            "ip": ip,
-            "port": cfg.get("port", 8765),
-            "config": cfg,
-        }).encode()
         self._send(200, "application/json", data)
 
     def _api_projects(self):
@@ -244,57 +206,26 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self._send(200, "application/json", json.dumps({"ok": ok}).encode())
 
     def _api_start(self, body):
-        # Path-based start (global tab)
-        if 'path' in body:
-            path = body['path']
-            session_id = body.get('session_id')
-            force_new = body.get('force_new', False)
-            if not force_new:
-                existing = find_tmux_session_for_project(_encode_path(path), session_id)
-                if existing:
-                    self._send(200, "application/json", b'{"ok":true}')
-                    return
-            else:
-                kill_session(path)
-            start_session_by_path(path, session_id)
-            self._send(200, "application/json", b'{"ok":true}')
+        path = body.get('path')
+        session_id = body.get('session_id')
+        force_new = body.get('force_new', False)
+        if not path:
+            self._send(400, "text/plain", b"missing path")
             return
-        # Name-based start (favorites tab)
-        name = body.get("name")
-        force_new = body.get("force_new", False)
-        with _lock:
-            cfg = load_config()
-        workspaces = scan_workspaces(cfg)
-        ws = next((w for w in workspaces if w["name"] == name), None)
-        if not ws:
-            self._send(404, "text/plain", b"workspace not found")
-            return
-        sessions = set(_load_session_map().values())
-        base = _path_base(ws["path"])
-        ws_running = any(s == base or s.startswith(base + '_') for s in sessions)
-        if not ws_running or force_new:
-            if force_new and ws_running:
-                kill_session(ws["path"])
-            start_session(name, ws["path"])
-        self._send(200, "application/json", b'{"ok":true}')
-
-    def _api_stop(self, body):
-        name = body.get("name")
-        if not name:
-            self._send(400, "text/plain", b"missing name")
-            return
-        with _lock:
-            cfg = load_config()
-        workspaces = scan_workspaces(cfg, include_hidden=True)
-        ws = next((w for w in workspaces if w["name"] == name), None)
-        if ws:
-            kill_session(ws["path"])
+        if not force_new:
+            existing = find_tmux_session_for_project(_encode_path(path), session_id)
+            if existing:
+                self._send(200, "application/json", b'{"ok":true}')
+                return
+        else:
+            kill_session(path)
+        start_session_by_path(path, session_id)
         self._send(200, "application/json", b'{"ok":true}')
 
     def _api_config_toggle(self, body):
         key = body.get("key")
         name = body.get("name")
-        if key not in ("pinned", "hidden"):
+        if key != "pinned":
             self._send(400, "text/plain", b"invalid key")
             return
         with _lock:
@@ -304,21 +235,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 lst.remove(name)
             else:
                 lst.append(name)
-                other = "pinned" if key == "hidden" else "hidden"
-                if name in cfg.get(other, []):
-                    cfg[other].remove(name)
-            save_config(cfg)
-        self._send(200, "application/json", b'{"ok":true}')
-
-    def _api_config_update(self, body):
-        allowed = {"scan_dir", "require_claude_md"}
-        updates = {k: v for k, v in body.items() if k in allowed}
-        if not updates:
-            self._send(400, "text/plain", b"no valid fields")
-            return
-        with _lock:
-            cfg = load_config()
-            cfg.update(updates)
             save_config(cfg)
         self._send(200, "application/json", b'{"ok":true}')
 
