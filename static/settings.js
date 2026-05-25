@@ -1,7 +1,4 @@
-/* global t, setLang, _lang, load, openWsPanel, showToast */
-
-let _requireMd = true;
-let _scanDir = '';
+/* global t, setLang, _lang, showToast */
 
 // ── Theme ──────────────────────────────────────────────────────
 let _theme = localStorage.getItem('launcher_theme') || 'dark';
@@ -36,12 +33,9 @@ _mq.addEventListener('change', () => {
 _applyThemeToDOM();
 
 // ── Sheet render ───────────────────────────────────────────────
-// eslint-disable-next-line no-unused-vars
 function renderSheet() {
   const sheet = document.getElementById('settings-sheet');
   if (!sheet) return;
-
-  const scanDisplay = _scanDir.replace(/^\/Users\/[^/]+/, '~') || '—';
 
   sheet.innerHTML = `
     <div class="sheet-handle"></div>
@@ -66,29 +60,6 @@ function renderSheet() {
         </div>
       </div>
     </div>
-
-    <div class="sheet-section-label">${t('settings_workspace_section')}</div>
-    <div class="sheet-group">
-      <div class="sheet-row" id="row-scan-dir">
-        <span class="sheet-icon">📁</span>
-        <span class="sheet-label">${t('settings_scan_dir')}</span>
-        <span class="sheet-value">${escSafe(scanDisplay)}</span>
-        <span class="sheet-chevron">›</span>
-      </div>
-      <div class="sheet-row" id="row-manage-ws">
-        <span class="sheet-icon">📋</span>
-        <span class="sheet-label">${t('settings_manage_ws')}</span>
-        <span class="sheet-chevron">›</span>
-      </div>
-      <div class="sheet-row" style="cursor:default">
-        <span class="sheet-icon">📄</span>
-        <span class="sheet-label">${t('settings_require_md')}</span>
-        <label class="toggle-wrap">
-          <input type="checkbox" id="toggle-require-md"${_requireMd ? ' checked' : ''}>
-          <div class="toggle-track"></div>
-        </label>
-      </div>
-    </div>
   `;
 
   sheet.querySelector('#lang-seg').addEventListener('click', e => {
@@ -103,57 +74,10 @@ function renderSheet() {
     applyTheme(btn.dataset.themeVal);
     renderSheet();
   });
-
-  sheet.querySelector('#row-scan-dir').addEventListener('click', () => {
-    // eslint-disable-next-line no-alert
-    const val = prompt(t('settings_scan_dir'), _scanDir);
-    if (val === null || val.trim() === _scanDir) return;
-    saveScanDir(val.trim());
-  });
-
-  sheet.querySelector('#row-manage-ws').addEventListener('click', () => {
-    openWsPanel();
-  });
-
-  sheet.querySelector('#toggle-require-md').addEventListener('change', e => {
-    saveRequireMd(e.target.checked);
-  });
-}
-
-async function loadSheetData() {
-  try {
-    const res = await fetch('/api/workspaces');
-    const data = await res.json();
-    _requireMd = data.config.require_claude_md !== false;
-    _scanDir = data.config.scan_dir || '';
-  } catch { /* ignore, use cached values */ }
-}
-
-async function saveScanDir(val) {
-  if (!val) return;
-  await fetch('/api/config', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ scan_dir: val }),
-  });
-  _scanDir = val;
-  renderSheet();
-  if (typeof load === 'function') load();
-}
-
-async function saveRequireMd(val) {
-  _requireMd = val;
-  await fetch('/api/config', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ require_claude_md: val }),
-  });
-  if (typeof load === 'function') load();
 }
 
 // ── Open / close ───────────────────────────────────────────────
-async function openSettings() {
-  await loadSheetData();
+function openSettings() {
   renderSheet();
   document.getElementById('gear-btn').classList.add('active');
   document.getElementById('sheet-overlay').classList.add('show');
@@ -171,7 +95,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ── Helper ─────────────────────────────────────────────────────
-function escSafe(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}

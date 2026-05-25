@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .phone {
+    position: relative;
+    width: 393px;
+    height: 852px;
+    background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 40%, #111 100%);
+    border-radius: 54px;
+    box-shadow:
+      0 0 0 1px #444,
+      0 0 0 2px #222,
+      inset 0 0 0 1px #555,
+      0 30px 80px rgba(0,0,0,0.8),
+      0 10px 30px rgba(0,0,0,0.5);
+    padding: 14px;
+  }
+
+  .phone::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 120px;
+    width: 3px;
+    height: 36px;
+    background: #333;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 50px 0 #333, 0 100px 0 #333;
+  }
+  .phone::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 160px;
+    width: 3px;
+    height: 70px;
+    background: #333;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .screen-wrap {
+    width: 100%;
+    height: 100%;
+    border-radius: 42px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar — same bg as app (#0d1117), Dynamic Island blends in */
+  .status-bar {
+    flex-shrink: 0;
+    height: 59px;
+    background: #0d1117;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    position: relative;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.3px;
+    flex: 1;
+  }
+
+  /* Dynamic Island — #000 on #0d1117, naturally blends */
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 36px;
+    background: #000;
+    border-radius: 18px;
+    z-index: 10;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* App iframe fills remaining space */
+  .iframe-wrap {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .glare {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+    border-radius: 42px 42px 0 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .home-bar {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    background: rgba(255,255,255,0.28);
+    border-radius: 3px;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="screen-wrap">
+
+      <div class="status-bar">
+        <span class="status-time">20:07</span>
+        <div class="dynamic-island"></div>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff">
+            <rect x="0"    y="6" width="3" height="6"  rx="1"/>
+            <rect x="4.5"  y="4" width="3" height="8"  rx="1"/>
+            <rect x="9"    y="2" width="3" height="10" rx="1"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="1"/>
+          </svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
+            <circle cx="8" cy="10" r="1.4" fill="#fff"/>
+            <path d="M4.2 7a5.4 5.4 0 0 1 7.6 0"  stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M1.5 4.2a9.2 9.2 0 0 1 13 0" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg width="27" height="13" viewBox="0 0 27 13" fill="none">
+            <rect x="0.6" y="1" width="22" height="11" rx="3" stroke="#fff" stroke-width="1.2"/>
+            <rect x="2" y="2.4" width="15" height="8.2" rx="1.8" fill="#30d158"/>
+            <path d="M23.8 4.5v4a2 2 0 0 0 0-4z" fill="#fff" opacity="0.45"/>
+          </svg>
+          <span style="color:#fff;font-size:12px;font-weight:600;margin-left:1px">14</span>
+        </div>
+      </div>
+
+      <div class="iframe-wrap">
+        <iframe src="http://localhost:8765" scrolling="no"></iframe>
+      </div>
+
+      <div class="glare"></div>
+      <div class="home-bar"></div>
+    </div>
+  </div>
+</body>
+</html>

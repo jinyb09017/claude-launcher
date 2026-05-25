@@ -267,7 +267,6 @@ function favCardHTML(p) {
         <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
       </div>
       <div class="card-right">
-        <span class="pin-badge">⭐</span>
         <span class="${countClass}">${p.session_count}</span>
         <span class="card-chevron">›</span>
       </div>

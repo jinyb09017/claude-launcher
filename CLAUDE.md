@@ -21,8 +21,8 @@ tail -f launcher.log
 
 ## 配置（config.json）
 
-- `pinned`: 置顶的项目名称列表
-- `hidden`: 隐藏的项目名称列表
+- `pinned`: 收藏的项目列表，格式为 `parent/child`（如 `"ai-claude/my-project"`）
+- `hidden`: 隐藏的项目列表，同 `pinned` 格式
 - `require_claude_md`: true = 只显示含 CLAUDE.md 的目录
 - `port`: 监听端口，默认 8765
 

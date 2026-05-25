@@ -15,7 +15,7 @@
 - 浏览本地所有项目目录，一键启动 tmux + claude 会话
 - 查看所有历史 Claude 对话（项目 → 会话 → 消息，三级浏览）
 - **在历史会话中直接输入消息，通过 tmux send-keys 与运行中的 Claude 交互**
-- 支持置顶 / 隐藏项目、关键词搜索、中英文切换、明暗主题
+- 支持收藏 / 隐藏项目、关键词搜索、中英文切换、明暗主题
 - 注册为 macOS launchd 服务，开机自启，崩溃自动重启
 
 ---
@@ -93,7 +93,7 @@ claude-launcher/
 ├── static/
 │   ├── index.html     # PWA 页面骨架
 │   ├── app.js         # 主应用逻辑（状态、渲染、交互、实时聊天）
-│   ├── settings.js    # 设置面板（主题、语言、工作空间管理）
+│   ├── settings.js    # 设置面板（主题、语言切换）
 │   ├── app.css        # 样式（CSS 变量主题、响应式布局）
 │   └── i18n.js        # 国际化（中文 / 英文）
 ├── tests/
@@ -141,7 +141,7 @@ ThreadingHTTPServer(('0.0.0.0', port), Handler).serve_forever()
 | POST | `/api/chat` | 向运行中的 tmux 会话发送消息 |
 | POST | `/api/sessions/delete` | 删除指定会话的 JSONL 记录 |
 | POST | `/api/projects/delete` | 删除项目全部历史日志（运行中拒绝） |
-| POST | `/api/config/toggle` | 切换置顶 / 隐藏状态 |
+| POST | `/api/config/toggle` | 切换收藏 / 隐藏状态 |
 | POST | `/api/config` | 更新扫描目录、过滤规则等 |
 | GET | `/static/*` | 返回前端静态资源 |
 
@@ -154,7 +154,7 @@ ThreadingHTTPServer(('0.0.0.0', port), Handler).serve_forever()
 1. 读取 `config.json` 中的 `scan_dir`（默认 `~/Documents/ai-claude`）
 2. 列出所有一级子目录，排除 `.` 开头的隐藏目录
 3. 若 `require_claude_md: true`，跳过不含 `CLAUDE.md` 的目录
-4. **排序规则**：置顶项目（`pinned`）按列表顺序优先，其余按目录修改时间倒序
+4. **排序规则**：收藏项目（`pinned`）按列表顺序优先，其余按目录修改时间倒序
 
 **运行状态检测**：通过 `tmux ls` 列出所有活跃 session，与 `_path_base(path)` 前缀比对：
 
@@ -405,22 +405,57 @@ find_tmux_session_for_project(encoded, session_id)
 
 纯原生 JavaScript，无框架，无构建工具，单文件。
 
+**两 Tab 架构**：
+
+```
+⭐ 收藏 Tab                    🌐 全部 Tab
+──────────────────────         ──────────────────────
+只显示已收藏的项目               全部 Claude 历史项目
+左滑 → 取消收藏                 按时间分组（7天内/更早）
+点击 → 会话列表面板             支持路径关键词搜索
+                                左滑 → 收藏 / 删除日志
+                                点击 → 会话列表面板
+```
+
+启动时默认加载收藏 Tab，切换到「全部」时才请求 `/api/projects`；回到「收藏」后数据已缓存，直接本地渲染，无需重新请求。
+
+**左滑操作（direction-lock 方案）**：
+
+收藏 Tab 和全部 Tab 的每张卡片均支持左滑手势：
+
+```
+收藏 Tab 卡片左滑：显示「取消收藏」按钮
+全部 Tab 卡片左滑：显示「收藏」+「删除日志」按钮
+会话列表左滑：显示「删除」按钮
+```
+
+方向锁定逻辑（移动 5px 后判断主方向）：
+- 水平为主 → 锁定水平，`e.preventDefault()` 阻止页面滚动，追踪 dx 露出按钮
+- 垂直为主 → 锁定垂直，关闭所有已展开的滑动行，允许页面正常滚动
+
+`touchmove` 注册时使用 `{ passive: false }` 以支持 `preventDefault`。
+
+**收藏机制**：
+
+收藏状态存储在 `config.json` 的 `pinned` 数组中，以 `display_name`（`parent/child` 格式，如 `"ai-claude/my-project"`）作为标识键。前端通过 `POST /api/config/toggle` 切换收藏状态，操作后立即本地更新 `_projects` 缓存并重新渲染，无需重新请求后端。
+
+**工作空间管理面板**（`openWsPanel`）：通过顶部齿轮图标右侧的管理按钮打开，列出所有工作空间（含隐藏项），可逐项切换收藏状态。
+
 **状态管理**：所有 UI 状态存储在模块级变量：
 
 ```javascript
-let workspaces = [];            // 工作空间列表
 let _currentTab = 'favorites';  // 当前 Tab（favorites / all）
-let _projects = [];             // 项目列表缓存
+let _projects = [];             // 项目列表缓存（含收藏状态）
 let _searchQuery = '';          // 搜索关键词
 let _chatLoading = false;       // 是否正在等待 AI 响应
 ```
 
-**网络轮询**：工作空间状态每 15 秒轮询一次；网络状态每 20 秒检测一次，同时监听 `online` / `offline` 事件即时响应。
+**网络轮询**：项目状态（running / 收藏）每 15 秒轮询一次；网络状态每 20 秒检测一次，同时监听 `online` / `offline` 事件即时响应。
 
 **三级滑动面板**：
 
 ```
-主界面（工作空间 / 项目列表）
+主界面（收藏 / 全部列表）
   └─ 会话列表面板（.slide-panel，从右滑入）
        └─ 消息查看 + 聊天面板（.slide-panel.on-top，再次从右叠加）
 ```
@@ -443,6 +478,8 @@ document.querySelectorAll('[data-i18n]').forEach(el => {
 });
 ```
 
+语言选择持久化到 `localStorage`；切换后同时触发 `render()`（刷新卡片列表）和 `renderSheet()`（刷新设置面板）。
+
 **主题（app.css + settings.js）**：
 
 CSS 自定义属性定义完整调色板，切换主题只需切换 `data-theme` 属性：
@@ -452,7 +489,9 @@ CSS 自定义属性定义完整调色板，切换主题只需切换 `data-theme`
 [data-theme="light"]{ --bg: #f5f5f5; --card: #ffffff; --text: #1a1a1a; }
 ```
 
-支持「跟随系统」模式（监听 `prefers-color-scheme` 媒体查询），选择持久化到 `localStorage`。
+支持「跟随系统」模式（监听 `prefers-color-scheme` 媒体查询），选择持久化到 `localStorage`。`settings.js` 在页面首次渲染前即调用 `_applyThemeToDOM()` 应用主题，避免白屏闪烁。
+
+**设置面板（settings.js）**：底部上拉 Sheet，仅包含外观设置（语言切换、主题切换）。工作空间管理（收藏/隐藏）独立为「管理工作空间」面板（`openWsPanel`），通过顶部按钮访问。
 
 ---
 
@@ -523,8 +562,8 @@ cp config.example.json config.json
   "scan_dir": "~/Documents/ai-claude",
   "require_claude_md": false,
   "port": 8765,
-  "pinned": ["my-project"],
-  "hidden": ["temp-project"],
+  "pinned": ["ai-claude/my-project"],
+  "hidden": ["ai-claude/temp-project"],
   "claude_env": {
     "HTTPS_PROXY": "",
     "HTTP_PROXY": "",
@@ -539,11 +578,11 @@ cp config.example.json config.json
 | `scan_dir` | 扫描工作空间的根目录，支持 `~` |
 | `require_claude_md` | `true` 时只显示含 `CLAUDE.md` 的目录 |
 | `port` | 监听端口，默认 8765 |
-| `pinned` | 置顶的项目名列表（按列表顺序显示在最前） |
-| `hidden` | 隐藏的项目名列表（不在「全部」Tab 中显示） |
+| `pinned` | 收藏的项目列表，格式为 `parent/child`（扫描目录末段 + 项目名），按列表顺序显示在收藏 Tab |
+| `hidden` | 隐藏的项目列表，同 `pinned` 格式，不在「全部」Tab 中显示 |
 | `claude_env` | 启动 claude 进程时注入的环境变量（如代理设置），留空则不注入 |
 
-配置可在应用内设置面板直接修改，无需手动编辑文件。
+收藏状态可通过在「全部」Tab 左滑项目直接操作，无需手动编辑 `config.json`。
 
 ---
 
