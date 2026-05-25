@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Session Discovery — Mockup</title>
+<style>
+:root {
+  --bg: #0d1117; --card: #161b22; --border: #30363d;
+  --text: #e6edf3; --sub: #8b949e; --accent: #58a6ff;
+  --green: #3fb950; --orange: #d29922; --red: #da3633;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100dvh;
+}
+
+/* Phone frame */
+.frame-wrap {
+  display: flex; gap: 48px; padding: 40px;
+  align-items: flex-start; justify-content: center;
+  flex-wrap: wrap;
+}
+.frame {
+  width: 375px; background: var(--bg);
+  border-radius: 40px; overflow: hidden;
+  border: 1px solid #333; position: relative;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+}
+.frame-label {
+  text-align: center; font-size: 12px; color: var(--sub);
+  margin-bottom: 12px; font-weight: 500; letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Header */
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(13,17,23,0.95); backdrop-filter: blur(14px);
+  padding: 14px 18px 11px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+header h1 { font-size: 19px; font-weight: 600; }
+.header-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+.header-sub { font-size: 12px; color: var(--sub); }
+.net-pill {
+  font-size: 11px; padding: 2px 7px; border-radius: 20px;
+  border: 1px solid rgba(63,185,80,.3); display: inline-flex;
+  align-items: center; gap: 4px; line-height: 1; color: var(--green);
+}
+.net-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.gear-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  color: var(--sub); width: 36px; height: 36px; font-size: 17px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* Tab bar */
+.tab-bar {
+  display: flex; border-bottom: 1px solid var(--border);
+  background: var(--bg); position: sticky; top: 61px; z-index: 9;
+}
+.tab {
+  flex: 1; padding: 11px; text-align: center; font-size: 14px;
+  color: var(--sub); cursor: pointer; border-bottom: 2px solid transparent;
+  font-weight: 500; transition: color .15s, border-color .15s;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Search bar */
+.search-wrap {
+  padding: 12px 16px 4px; position: sticky; top: 105px; z-index: 8;
+  background: var(--bg);
+}
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px;
+}
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  font-size: 14px; color: var(--text); font-family: inherit;
+}
+.search-box input::placeholder { color: var(--sub); }
+.search-icon { color: var(--sub); font-size: 14px; flex-shrink: 0; }
+
+/* Main */
+main { padding: 8px 16px 80px; max-width: 100%; }
+.section-label {
+  font-size: 11px; font-weight: 600; color: var(--sub);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin: 14px 0 8px;
+}
+
+/* Card */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 13px 14px;
+  margin-bottom: 8px; display: flex;
+  justify-content: space-between; align-items: center;
+  cursor: pointer; transition: border-color .15s;
+  user-select: none;
+}
+.card:active { border-color: var(--accent); }
+.card.running { border-color: rgba(63,185,80,.35); }
+.card-left { flex: 1; min-width: 0; margin-right: 10px; }
+.card-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-path { font-size: 12px; color: var(--sub); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-meta { font-size: 11px; color: var(--sub); margin-top: 3px; }
+.card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-dot.on  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.status-dot.off { background: var(--border); }
+.stop-btn {
+  background: none; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--sub); font-size: 11px; padding: 3px 7px; cursor: pointer;
+  line-height: 1.4;
+}
+
+/* Session count badge */
+.session-count {
+  font-size: 11px; padding: 2px 7px; border-radius: 10px;
+  background: rgba(88,166,255,.12); color: var(--accent);
+  border: 1px solid rgba(88,166,255,.2); white-space: nowrap;
+}
+.chevron { color: var(--sub); font-size: 13px; }
+
+/* Session panel (slide-in from right) */
+.session-panel-overlay {
+  display: none; position: absolute; inset: 0; z-index: 50;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(2px);
+}
+.session-panel-overlay.show { display: block; }
+.session-panel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 100%;
+  background: var(--bg); transform: translateX(100%);
+  transition: transform .28s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow-y: auto;
+}
+.session-panel-overlay.show .session-panel { transform: translateX(0); }
+
+.panel-header {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  position: sticky; top: 0; background: var(--bg); z-index: 5;
+}
+.back-btn {
+  background: none; border: none; color: var(--accent);
+  font-size: 15px; cursor: pointer; padding: 4px; display: flex; align-items: center; gap: 4px;
+}
+.panel-title { font-size: 16px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.new-session-btn {
+  background: var(--accent); color: #000; border: none;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  padding: 6px 12px; cursor: pointer; white-space: nowrap;
+}
+
+.panel-path {
+  padding: 8px 16px 0; font-size: 12px; color: var(--sub);
+}
+
+.session-list { padding: 8px 16px 32px; }
+.session-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+  cursor: pointer; transition: border-color .15s;
+}
+.session-item:active { border-color: var(--accent); }
+.session-item-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.session-date { font-size: 12px; color: var(--sub); }
+.session-preview {
+  font-size: 13px; color: var(--text);
+  line-height: 1.5; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.session-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px;
+}
+.session-size { font-size: 11px; color: var(--sub); }
+.resume-tag {
+  font-size: 11px; padding: 2px 7px; border-radius: 6px;
+  border: 1px solid rgba(88,166,255,.3); color: var(--accent);
+}
+
+/* Match highlight */
+.hl { color: var(--accent); font-weight: 600; }
+
+/* Page scroll container */
+.page { height: 680px; overflow-y: auto; position: relative; }
+
+/* Overlay for bottom-sheet modal */
+.overlay {
+  display: none; position: absolute; inset: 0;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+  z-index: 100; align-items: flex-end; justify-content: center;
+}
+.overlay.show { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px 20px 0 0; width: 100%;
+  padding: 24px 20px 28px;
+}
+.modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+.modal p  { font-size: 14px; color: var(--sub); margin-bottom: 18px; line-height: 1.5; }
+.btn {
+  display: block; width: 100%; padding: 14px; border: none;
+  border-radius: var(--radius); font-size: 16px; font-weight: 500;
+  cursor: pointer; margin-bottom: 10px;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-secondary { background: var(--card); border: 1px solid var(--border); color: var(--text); }
+.btn-danger  { background: var(--red); color: #fff; }
+.btn-cancel  { background: var(--border); color: var(--text); }
+
+/* Annotation arrows */
+.annotations {
+  position: relative; padding: 20px 0;
+}
+.ann {
+  font-size: 12px; color: #6b7280; line-height: 1.5;
+  margin: 6px 0;
+}
+.ann strong { color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div style="text-align:center;padding:32px 0 8px">
+  <h2 style="font-size:20px;font-weight:600;color:#e6edf3">Session Discovery — Interaction Mockup</h2>
+  <p style="font-size:13px;color:#8b949e;margin-top:6px">点击卡片可体验交互流程</p>
+</div>
+
+<div class="frame-wrap">
+
+  <!-- ── Frame 1: 收藏 Tab ── -->
+  <div>
+    <div class="frame-label">① 收藏 Tab（当前置顶）</div>
+    <div class="frame">
+      <div class="page" id="page1">
+        <header>
+          <div>
+            <h1>⚡ Claude Launcher</h1>
+            <div class="header-meta">
+              <span class="header-sub">192.168.1.100:8765</span>
+              <span class="net-pill"><span class="dot"></span>联通</span>
+            </div>
+          </div>
+          <button class="gear-btn">⚙</button>
+        </header>
+
+        <div class="tab-bar">
+          <div class="tab active">⭐ 收藏</div>
+          <div class="tab" onclick="switchToFrame2()">🌐 全部</div>
+        </div>
+
+        <main>
+          <div class="section-label">置顶项目</div>
+
+          <div class="card running" onclick="openModal('page1')">
+            <div class="card-left">
+              <div class="card-name">question-explore</div>
+              <div class="card-path">~/Documents/ai-claude/question-explore</div>
+            </div>
+            <div class="card-right">
+              <button class="stop-btn">停止</button>
+              <div class="status-dot on"></div>
+            </div>
+          </div>
+
+          <div class="card running">
+            <div class="card-left">
+              <div class="card-name">overmind</div>
+              <div class="card-path">~/Documents/ai-claude/overmind</div>
+            </div>
+            <div class="card-right">
+              <button class="stop-btn">停止</button>
+              <div class="status-dot on"></div>
+            </div>
+          </div>
+
+          <div class="section-label">其他项目</div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">claude-launcher</div>
+              <div class="card-path">~/Documents/ai-claude/claude-launcher</div>
+            </div>
+            <div class="card-right">
+              <div class="status-dot off"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">hermes</div>
+              <div class="card-path">~/Documents/ai-claude/hermes</div>
+            </div>
+            <div class="card-right">
+              <div class="status-dot off"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">claude-brain</div>
+              <div class="card-path">~/Documents/ai-claude/claude-brain</div>
+            </div>
+            <div class="card-right">
+              <div class="status-dot off"></div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Modal -->
+        <div class="overlay" id="modal-page1">
+          <div class="modal">
+            <h2>question-explore</h2>
+            <p>该项目已有运行中的会话，选择操作：</p>
+            <button class="btn btn-primary" onclick="closeModal('page1')">继续使用现有会话</button>
+            <button class="btn btn-danger"  onclick="closeModal('page1')">终止并新建会话</button>
+            <button class="btn btn-cancel"  onclick="closeModal('page1')">取消</button>
+          </div>
+        </div>
+      </div><!-- /page1 -->
+    </div>
+    <div class="annotations">
+      <div class="ann">• <strong>Tab 切换</strong>：收藏 / 全部</div>
+      <div class="ann">• 收藏 Tab 行为与现在一致</div>
+      <div class="ann">• 运行中项目有绿点 + 停止按钮</div>
+      <div class="ann">• 点击运行中项目 → 弹出操作选择</div>
+    </div>
+  </div>
+
+  <!-- ── Frame 2: 全部 Tab（搜索前）── -->
+  <div>
+    <div class="frame-label">② 全部 Tab · 发现 Claude 项目</div>
+    <div class="frame">
+      <div class="page" id="page2">
+        <header>
+          <div>
+            <h1>⚡ Claude Launcher</h1>
+            <div class="header-meta">
+              <span class="header-sub">192.168.1.100:8765</span>
+              <span class="net-pill"><span class="dot"></span>联通</span>
+            </div>
+          </div>
+          <button class="gear-btn">⚙</button>
+        </header>
+
+        <div class="tab-bar">
+          <div class="tab">⭐ 收藏</div>
+          <div class="tab active">🌐 全部</div>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="搜索项目路径..." id="search-input"
+              oninput="handleSearch(this.value)">
+          </div>
+        </div>
+
+        <main id="project-list">
+          <div class="section-label">最近 7 天</div>
+
+          <div class="card" onclick="openSessionPanel('page2', 'claude-launcher', 'ai-claude/claude-launcher', '~/Documents/ai-claude/claude-launcher', 4)">
+            <div class="card-left">
+              <div class="card-name">ai-claude / claude-launcher</div>
+              <div class="card-path">~/Documents/ai-claude/claude-launcher</div>
+              <div class="card-meta">最近：今天 17:30</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">4 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card" onclick="openSessionPanel('page2', 'overmind-rep', 'workspace-repo/overmind-rep', '~/Documents/workspace-repo/overmind-rep', 14)">
+            <div class="card-left">
+              <div class="card-name">workspace-repo / overmind-rep</div>
+              <div class="card-path">~/Documents/workspace-repo/overmind-rep</div>
+              <div class="card-meta">最近：今天 17:05</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">14 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card" onclick="openSessionPanel('page2', 'overmind-service', 'overmind-rep/overmind-service', '~/Documents/workspace-repo/overmind-rep/overmind-service', 3)">
+            <div class="card-left">
+              <div class="card-name">overmind-rep / overmind-service</div>
+              <div class="card-path">~/Documents/workspace-repo/overmind-rep/overmind-service</div>
+              <div class="card-meta">最近：今天 17:03</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">3 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">ai-claude / ssh-operate</div>
+              <div class="card-path">~/Documents/ai-claude/ssh-operate</div>
+              <div class="card-meta">最近：今天 16:00</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">1 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="section-label">更早</div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">ai-claude / question-explore</div>
+              <div class="card-path">~/Documents/ai-claude/question-explore</div>
+              <div class="card-meta">最近：昨天 11:14</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">41 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">ai-claude / report-center</div>
+              <div class="card-path">~/Documents/ai-claude/report-center</div>
+              <div class="card-meta">最近：昨天 21:51</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">7 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">ai-claude / multica</div>
+              <div class="card-path">~/Documents/ai-claude/multica</div>
+              <div class="card-meta">最近：前天 11:53</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">17 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+        </main>
+
+        <!-- Session panel overlay -->
+        <div class="session-panel-overlay" id="session-panel-page2">
+          <div class="session-panel">
+            <div class="panel-header">
+              <button class="back-btn" onclick="closeSessionPanel('page2')">‹ 返回</button>
+              <div class="panel-title" id="panel-title-page2">项目名</div>
+              <button class="new-session-btn" onclick="closeSessionPanel('page2')">+ 新建</button>
+            </div>
+            <div class="panel-path" id="panel-path-page2"></div>
+            <div class="session-list" id="session-list-page2"></div>
+          </div>
+        </div>
+      </div><!-- /page2 -->
+    </div>
+    <div class="annotations">
+      <div class="ann">• 扫描 <strong>~/.claude/projects/</strong> 所有目录</div>
+      <div class="ann">• 项目名 = <strong>后两级路径</strong>（如 ai-claude / launcher）</div>
+      <div class="ann">• 显示会话数量 + 最近访问时间</div>
+      <div class="ann">• 点击项目 → 历史会话面板</div>
+    </div>
+  </div>
+
+  <!-- ── Frame 3: 全部 Tab（搜索中）── -->
+  <div>
+    <div class="frame-label">③ 全部 Tab · 模糊搜索</div>
+    <div class="frame">
+      <div class="page">
+        <header>
+          <div>
+            <h1>⚡ Claude Launcher</h1>
+            <div class="header-meta">
+              <span class="header-sub">192.168.1.100:8765</span>
+              <span class="net-pill"><span class="dot"></span>联通</span>
+            </div>
+          </div>
+          <button class="gear-btn">⚙</button>
+        </header>
+
+        <div class="tab-bar">
+          <div class="tab">⭐ 收藏</div>
+          <div class="tab active">🌐 全部</div>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" value="overmind" style="color:var(--text)">
+          </div>
+        </div>
+
+        <main>
+          <div class="section-label">搜索结果 · 3 个项目</div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">workspace-repo / <span class="hl">overmind</span>-rep</div>
+              <div class="card-path">~/Documents/workspace-repo/<span class="hl">overmind</span>-rep</div>
+              <div class="card-meta">最近：今天 17:05</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">14 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name"><span class="hl">overmind</span>-rep / <span class="hl">overmind</span>-service</div>
+              <div class="card-path">~/Documents/workspace-repo/<span class="hl">overmind</span>-rep/<span class="hl">overmind</span>-service</div>
+              <div class="card-meta">最近：今天 17:03</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">3 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-left">
+              <div class="card-name">ai-claude / <span class="hl">overmind</span></div>
+              <div class="card-path">~/Documents/ai-claude/<span class="hl">overmind</span></div>
+              <div class="card-meta">最近：前天 10:46</div>
+            </div>
+            <div class="card-right">
+              <span class="session-count">9 次对话</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="ann">• 搜索匹配路径中的任意片段</div>
+      <div class="ann">• <strong style="color:var(--accent)">高亮</strong>匹配位置</div>
+      <div class="ann">• 无时间分组，按相关性排序</div>
+    </div>
+  </div>
+
+  <!-- ── Frame 4: 历史会话面板 ── -->
+  <div>
+    <div class="frame-label">④ 历史会话面板（点击项目后）</div>
+    <div class="frame">
+      <div class="page">
+        <div style="background:var(--bg)">
+          <div class="panel-header" style="position:sticky;top:0;background:var(--bg);z-index:5">
+            <button class="back-btn">‹ 返回</button>
+            <div class="panel-title">ai-claude / claude-launcher</div>
+            <button class="new-session-btn">+ 新建</button>
+          </div>
+          <div class="panel-path">~/Documents/ai-claude/claude-launcher</div>
+
+          <div class="session-list">
+            <div class="section-label" style="margin-top:14px">4 次历史会话</div>
+
+            <!-- Session 1 - most recent -->
+            <div class="session-item" style="border-color: rgba(63,185,80,.35)">
+              <div class="session-item-top">
+                <span style="font-size:12px;color:var(--green);font-weight:500">● 运行中</span>
+                <span class="session-date">今天 17:30</span>
+              </div>
+              <div class="session-preview">帮我重新设计实现 claude 会话的发现机制。应该直接从 claude 的日志文件列出所有可选的会话...</div>
+              <div class="session-footer">
+                <span class="session-size">15 KB · 进行中</span>
+                <span class="resume-tag">恢复</span>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item-top">
+                <span class="session-date">昨天 23:13</span>
+                <span class="session-size">1.1 MB</span>
+              </div>
+              <div class="session-preview">设置面板重构：语言切换、主题、工作空间配置，将 app.js 拆分为 static/ 目录结构...</div>
+              <div class="session-footer">
+                <span style="font-size:11px;color:var(--sub)">约 200 条消息</span>
+                <span class="resume-tag">恢复</span>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item-top">
+                <span class="session-date">昨天 17:45</span>
+                <span class="session-size">182 KB</span>
+              </div>
+              <div class="session-preview">将 app.css 主题变量和 index.html 提取到 static/ 目录，添加 i18n.js 中英文翻译支持...</div>
+              <div class="session-footer">
+                <span style="font-size:11px;color:var(--sub)">约 30 条消息</span>
+                <span class="resume-tag">恢复</span>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item-top">
+                <span class="session-date">昨天 21:45</span>
+                <span class="session-size">66 KB</span>
+              </div>
+              <div class="session-preview">Claude 工作空间管理 PWA，支持局域网访问，从手机启动和管理 Claude Code 工作空间...</div>
+              <div class="session-footer">
+                <span style="font-size:11px;color:var(--sub)">约 12 条消息</span>
+                <span class="resume-tag">恢复</span>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--sub);line-height:1.6">
+              <strong style="color:var(--text)">+ 新建会话</strong><br>
+              将在 claude-launcher 目录新建 Claude 会话<br>
+              会话名：<code style="color:var(--accent)">ai-claude/claude-launcher</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="ann">• 每条会话显示<strong>第一条用户消息</strong>预览</div>
+      <div class="ann">• 显示文件大小 / 消息量</div>
+      <div class="ann">• 运行中会话高亮绿边</div>
+      <div class="ann">• 新建时默认会话名 = 后两级路径</div>
+      <div class="ann">• 恢复 → <code style="color:var(--accent)">claude --resume &lt;id&gt;</code></div>
+    </div>
+  </div>
+
+</div><!-- /frame-wrap -->
+
+<script>
+// Frame 1 modal
+function openModal(pageId) {
+  document.getElementById('modal-' + pageId).classList.add('show');
+}
+function closeModal(pageId) {
+  document.getElementById('modal-' + pageId).classList.remove('show');
+}
+
+// Session panel
+const sessionData = {
+  'claude-launcher': [
+    { date: '今天 17:30', preview: '帮我重新设计实现 claude 会话的发现机制。应该直接从 claude 的日志文件列出所有可选的会话...', size: '15 KB', msgs: '进行中', running: true },
+    { date: '昨天 23:13', preview: '设置面板重构：语言切换、主题、工作空间配置，将 app.js 拆分为 static/ 目录结构...', size: '1.1 MB', msgs: '约 200 条' },
+    { date: '昨天 17:45', preview: '将 app.css 主题变量提取到 static/，添加 i18n.js 中英文翻译支持，重构服务器入口...', size: '182 KB', msgs: '约 30 条' },
+    { date: '昨天 21:45', preview: 'Claude 工作空间管理 PWA，支持局域网访问，从手机启动和管理 Claude Code 工作空间...', size: '66 KB', msgs: '约 12 条' },
+  ],
+  'overmind-rep': [
+    { date: '今天 17:05', preview: 'overmind 需求管理平台 API 接口规范提取，整理 Controller 层接口文档...', size: '240 KB', msgs: '约 45 条' },
+    { date: '今天 14:22', preview: '修复工单列表分页查询性能问题，添加索引优化方案...', size: '88 KB', msgs: '约 20 条' },
+    { date: '昨天 16:31', preview: 'PRD 审计：五维度检查需求文档，识别逻辑漏洞和等价类缺失...', size: '512 KB', msgs: '约 90 条' },
+  ],
+  'overmind-service': [
+    { date: '今天 17:03', preview: 'Java Spring Boot 服务重构，梳理 Controller → Service → Repository 依赖层次...', size: '310 KB', msgs: '约 55 条' },
+    { date: '昨天 09:18', preview: 'Sequelize migration 失败排查，生产数据库回滚方案...', size: '95 KB', msgs: '约 18 条' },
+  ],
+};
+
+function openSessionPanel(pageId, key, displayName, path, count) {
+  const overlay = document.getElementById('session-panel-' + pageId);
+  document.getElementById('panel-title-' + pageId).textContent = displayName;
+  document.getElementById('panel-path-' + pageId).textContent = path;
+
+  const sessions = sessionData[key] || [];
+  const listEl = document.getElementById('session-list-' + pageId);
+
+  let html = `<div class="section-label" style="margin-top:14px">${sessions.length} 次历史会话</div>`;
+  sessions.forEach(s => {
+    const runningStyle = s.running ? 'border-color: rgba(63,185,80,.35)' : '';
+    const statusLine = s.running
+      ? `<span style="font-size:12px;color:var(--green);font-weight:500">● 运行中</span>`
+      : `<span class="session-date">${s.date}</span>`;
+    const dateRight = s.running
+      ? `<span class="session-date">${s.date}</span>`
+      : `<span class="session-size">${s.size}</span>`;
+    html += `
+      <div class="session-item" style="${runningStyle}">
+        <div class="session-item-top">${statusLine}${dateRight}</div>
+        <div class="session-preview">${s.preview}</div>
+        <div class="session-footer">
+          <span style="font-size:11px;color:var(--sub)">${s.msgs}</span>
+          <span class="resume-tag">恢复</span>
+        </div>
+      </div>`;
+  });
+
+  const lastName = displayName.split('/').pop().trim();
+  html += `
+    <div style="margin-top:16px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--sub);line-height:1.6">
+      <strong style="color:var(--text)">+ 新建会话</strong><br>
+      将在 ${lastName} 目录新建 Claude 会话<br>
+      会话名：<code style="color:var(--accent)">${displayName}</code>
+    </div>`;
+
+  listEl.innerHTML = html;
+  overlay.classList.add('show');
+}
+
+function closeSessionPanel(pageId) {
+  document.getElementById('session-panel-' + pageId).classList.remove('show');
+}
+
+function switchToFrame2() {
+  // Visual hint only in mockup
+}
+</script>
+</body>
+</html>
