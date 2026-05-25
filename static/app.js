@@ -199,7 +199,7 @@ async function openWsPanel() {
 
 function closeWsPanel() {
   document.getElementById('settings-overlay').classList.remove('show');
-  load();
+  loadProjects();
 }
 
 // ── Modal + ws-panel wiring ────────────────────────────────────
