@@ -270,7 +270,7 @@ function favCardHTML(p) {
       <div class="card-left">
         <div class="card-name">${escHTML(p.display_name || '')}</div>
         <div class="card-path">${pathDisplay}</div>
-        <div class="card-meta">最近：${age}</div>
+        <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
       </div>
       <div class="card-right">
         <span class="${countClass}">${p.session_count}</span>
@@ -346,7 +346,7 @@ function _bindFavSwipe(container) {
       await post('/api/config/toggle', { key: 'pinned', name: proj.display_name });
       proj.pinned = false;
       renderFavorites();
-      renderProjects();
+      if (_currentTab === 'all') renderProjects();
       showToast(t('btn_unfavorite'), 'info');
     });
   });
@@ -378,7 +378,7 @@ async function loadProjects() {
     const res = await fetch('/api/projects');
     const data = await res.json();
     _projects = data.projects;
-    renderFavorites();
+    if (_currentTab === 'favorites') renderFavorites();
     if (_currentTab === 'all') renderProjects();
   } catch { /* ignore */ }
 }
