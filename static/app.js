@@ -359,7 +359,10 @@ function switchTab(tab) {
     el.classList.toggle('active', el.dataset.tab === tab);
   });
   if (tab === 'favorites') renderFavorites();
-  if (tab === 'all' && _projects.length === 0) loadProjects();
+  if (tab === 'all') {
+    if (_projects.length === 0) loadProjects();
+    else renderProjects();
+  }
 }
 
 document.querySelectorAll('.tab-item').forEach(btn => {
