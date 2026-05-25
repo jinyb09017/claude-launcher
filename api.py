@@ -151,7 +151,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
         pinned_set = set(cfg.get('pinned', []))
         projects = scan_claude_projects()
         active_tmux = set(_load_session_map().values())
-        from datetime import datetime
         now = datetime.now().timestamp()
         result = []
         for p in projects:
