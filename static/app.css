@@ -130,6 +130,7 @@ main {
 .card-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* .card-path defined in global section below with direction:rtl */
 .card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.pin-badge { font-size: 12px; line-height: 1; }
 .project-swipe-wrap {
   position: relative; overflow: hidden;
   border-radius: var(--radius); margin-bottom: 9px;

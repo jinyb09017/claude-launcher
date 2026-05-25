@@ -267,6 +267,7 @@ function favCardHTML(p) {
         <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
       </div>
       <div class="card-right">
+        <span class="pin-badge">⭐</span>
         <span class="${countClass}">${p.session_count}</span>
         <span class="card-chevron">›</span>
       </div>
@@ -556,6 +557,7 @@ function projectCardHTML(p, q) {
         <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
       </div>
       <div class="card-right">
+        ${p.pinned ? '<span class="pin-badge">⭐</span>' : ''}
         <span class="${countClass}">${p.session_count}</span>
         <span class="card-chevron">›</span>
       </div>
@@ -565,7 +567,6 @@ function projectCardHTML(p, q) {
 
 function _formatAge(mtime) {
   const diff = (Date.now() / 1000) - mtime;
-  if (diff < 60)     return '刚刚';
   if (diff < 3600)   return Math.floor(diff / 60) + ' 分钟前';
   if (diff < 86400)  return '今天 ' + new Date(mtime * 1000).toLocaleTimeString('zh', {hour:'2-digit', minute:'2-digit'});
   if (diff < 172800) return '昨天 ' + new Date(mtime * 1000).toLocaleTimeString('zh', {hour:'2-digit', minute:'2-digit'});
