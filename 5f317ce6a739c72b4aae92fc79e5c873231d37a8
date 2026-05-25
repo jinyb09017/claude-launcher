@@ -1,0 +1,328 @@
+static/index.html
+  51e2bf1d494f7138 76-78
+  3b039b59cc936c85 5,53
+  18fa99a4d0450ef3 11
+  b69cdc492a50c4d4 34-39,44-52,54-75
+  735185c9788a2a30 92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.8",
+  "base_commit_sha": "5f317ce6a739c72b4aae92fc79e5c873231d37a8",
+  "prompts": {
+    "18fa99a4d0450ef3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bebf3af0-dfa4-4aa6-aac4-0c47b732ce52",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 4,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/index.html": {
+          "accepted_lines": 1
+        },
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 3
+        }
+      }
+    },
+    "1b57a86a045dfb51": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e59bb-36fe-79f3-8364-abb922c631a3",
+        "model": "unknown"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 1
+        }
+      }
+    },
+    "1ef7c73c8fbc0c7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "486488cf-12cd-4430-83cc-4290e3f16389",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 72729,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".superpowers/brainstorm/26728-1779371362/content/entry-point.html": {
+          "accepted_lines": 84
+        },
+        "launcher.log": {
+          "accepted_lines": 72176
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.log": {
+          "accepted_lines": 6
+        },
+        "config.json": {
+          "accepted_lines": 5
+        },
+        ".superpowers/brainstorm/34919-1779371851/state/server.pid": {
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/26728-1779371362/state/server-info": {
+          "accepted_lines": 1
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/final-design.html": {
+          "accepted_lines": 174
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/interaction.html": {
+          "accepted_lines": 115
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/float-menu.html": {
+          "accepted_lines": 83
+        },
+        ".superpowers/brainstorm/34919-1779371851/content/entry-point.html": {
+          "accepted_lines": 84
+        }
+      }
+    },
+    "3b039b59cc936c85": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e59bb-2224-7880-97b4-32d0f447bcae",
+        "model": "gpt-5.5"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 229,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 151
+        },
+        "static/index.html": {
+          "accepted_lines": 2
+        },
+        "tests/test_session_preview.py": {
+          "accepted_lines": 37
+        },
+        "workspace.py": {
+          "accepted_lines": 39
+        }
+      }
+    },
+    "4c1ca813cb29ae66": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e087eedb-ba35-49d9-b60d-94ef7d0b18ba",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 2
+        }
+      }
+    },
+    "504bea4dbec2ab9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e1f5396b-631a-4b73-b210-39e22ec69859",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 18,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 7
+        },
+        ".setting/mcp-mysql-cli.log": {
+          "accepted_lines": 11
+        }
+      }
+    },
+    "51e2bf1d494f7138": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b76f781-eacc-433a-935b-fd27a360bb24",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1028,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql-cli.log": {
+          "accepted_lines": 50
+        },
+        "launcher.log": {
+          "accepted_lines": 880
+        },
+        "server.py": {
+          "accepted_lines": 1
+        },
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 93
+        },
+        "static/index.html": {
+          "accepted_lines": 4
+        }
+      }
+    },
+    "67e244118c089510": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d512e889-ab58-499d-85a2-d8195cd2fafd",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 199,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "launcher.log": {
+          "accepted_lines": 194
+        },
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 2
+        },
+        "server.py": {
+          "accepted_lines": 3
+        }
+      }
+    },
+    "69286a6ed9de6074": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d5a69d96-2ca5-4c4d-9ce4-431cce83a61b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 1
+        }
+      }
+    },
+    "735185c9788a2a30": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7edcc053-5401-4c31-a902-1a6a19469c2b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 12,
+      "accepted_lines": 656,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "static/index.html": {
+          "additions": 1,
+          "deletions": 12,
+          "accepted_lines": 25
+        },
+        "server.py": {
+          "accepted_lines": 2
+        },
+        "workspace.py": {
+          "accepted_lines": 629
+        }
+      }
+    },
+    "b69cdc492a50c4d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bb2f1726-b8be-4b4f-9902-9376359f130f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 90,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".setting/mcp-mysql.log": {
+          "accepted_lines": 13
+        },
+        "launcher.log": {
+          "accepted_lines": 9
+        },
+        ".playwright-mcp/console-2026-05-23T01-38-03-138Z.log": {
+          "accepted_lines": 4
+        },
+        ".setting/mcp-mysql-cli.log": {
+          "accepted_lines": 25
+        },
+        "static/index.html": {
+          "accepted_lines": 39
+        }
+      }
+    },
+    "bf268de37a040f51": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b78841d4-0a15-43ec-a3d5-9e132f8bf8d1",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 16,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".claude/settings.json": {
+          "accepted_lines": 16
+        }
+      }
+    },
+    "cda72c0f71df4dae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1ecbd48f-5773-4ed2-92da-5adbc7f351e8",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "明哲",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 178,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "iphone-preview.html": {
+          "accepted_lines": 178
+        }
+      }
+    }
+  }
+}
