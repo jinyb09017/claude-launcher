@@ -180,15 +180,12 @@ async function openWsPanel() {
   const data = await res.json();
   const cfg = data.config;
   const html = data.workspaces.map(w => {
-    const isHidden = w.is_hidden;
     const isPinned = cfg.pinned.includes(w.name);
-    return `<div class="ws-item ${isHidden ? 'hidden-item' : ''}">
+    return `<div class="ws-item">
       <span class="ws-item-name">${escHTML(w.name)}</span>
       <div>
         <button class="tag-btn ${isPinned ? 'active-pin' : ''}"
           data-action="pin" data-name="${escAttr(w.name)}">${t('btn_pin')}</button>
-        <button class="tag-btn ${isHidden ? 'active-hide' : ''}"
-          data-action="hide" data-name="${escAttr(w.name)}">${t('btn_hide')}</button>
       </div>
     </div>`;
   }).join('');
@@ -205,12 +202,9 @@ function closeWsPanel() {
 // ── Modal + ws-panel wiring ────────────────────────────────────
 
 document.getElementById('settings-list').addEventListener('click', async e => {
-  const btn = e.target.closest('[data-action]');
+  const btn = e.target.closest('[data-action="pin"]');
   if (!btn) return;
-  await post('/api/config/toggle', {
-    key: btn.dataset.action === 'pin' ? 'pinned' : 'hidden',
-    name: btn.dataset.name,
-  });
+  await post('/api/config/toggle', { key: 'pinned', name: btn.dataset.name });
   openWsPanel();
 });
 
