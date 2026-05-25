@@ -2,13 +2,13 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Claude">
 <title>Claude Launcher</title>
 <link rel="manifest" href="/manifest.json">
-<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/app.css?v=3">
 </head>
 <body>
 
@@ -31,18 +31,51 @@
   <button class="gear-btn" id="gear-btn" aria-label="Settings">⚙</button>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-item active" id="tab-favorites" data-tab="favorites">⭐ 收藏</button>
+  <button class="tab-item" id="tab-all" data-tab="all">🌐 全部</button>
+</div>
+
+<!-- Favorites tab content -->
 <main id="main">
   <div class="empty" data-i18n="empty_loading">加载中...</div>
 </main>
 
-<!-- Session conflict modal -->
-<div class="overlay" id="modal">
-  <div class="modal">
-    <h2 id="modal-title"></h2>
-    <p id="modal-desc"></p>
-    <button class="btn btn-primary" id="btn-reuse"        data-i18n="btn_reuse">继续使用现有会话</button>
-    <button class="btn btn-danger"  id="btn-new"          data-i18n="btn_new_session">终止并新建会话</button>
-    <button class="btn btn-cancel"  id="btn-cancel-modal" data-i18n="btn_cancel">取消</button>
+<!-- All tab content -->
+<div id="projects-view" style="display:none">
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="project-search" placeholder="搜索项目路径...">
+      <button class="search-clear" id="search-clear-btn">✕</button>
+    </div>
+  </div>
+  <div id="projects-list"></div>
+</div>
+
+<!-- Session list panel (level 2) -->
+<div class="slide-panel" id="sess-panel">
+  <div class="panel-nav">
+    <button class="panel-back" id="sess-back">‹ 全部</button>
+    <div class="panel-title" id="sess-title"></div>
+    <button class="panel-action primary" id="sess-new-btn">+ 新建</button>
+  </div>
+  <div class="panel-subpath" id="sess-path"></div>
+  <div style="padding:4px 16px 32px" id="sess-list"></div>
+</div>
+
+<!-- Message viewer panel (level 3) -->
+<div class="slide-panel on-top" id="msg-panel">
+  <div class="panel-nav">
+    <button class="panel-back" id="msg-back">‹ 会话列表</button>
+    <div class="panel-title" id="msg-title"></div>
+    <button class="panel-action ghost" id="msg-resume-btn">恢复会话</button>
+  </div>
+  <div class="msg-session-info" id="msg-info"></div>
+  <div class="msg-list" id="msg-list"></div>
+  <div class="msg-input-bar" id="msg-input-bar">
+    <textarea id="msg-input" rows="1" placeholder="输入消息..."></textarea>
+    <button id="msg-send-btn" class="msg-send-btn">发送</button>
   </div>
 </div>
 
@@ -56,7 +89,7 @@
   <div class="settings-panel">
     <h2 data-i18n="ws_panel_title">工作空间管理</h2>
     <p style="font-size:13px;color:var(--sub);margin-bottom:16px"
-       data-i18n="ws_panel_hint">置顶常用项目，隐藏不需要显示的目录</p>
+       data-i18n="ws_panel_hint_new">置顶收藏的项目，在收藏 tab 快速访问</p>
     <div id="settings-list"></div>
     <br>
     <button class="btn btn-cancel" id="btn-close-settings" data-i18n="btn_close">关闭</button>
