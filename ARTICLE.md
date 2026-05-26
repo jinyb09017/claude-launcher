@@ -308,6 +308,26 @@ macOS 拉下来，`python3 server.py`，完事。
 
 ---
 
+## 番外：在外地也能用？VPN + Tailscale 搞定
+
+有人会问：这个工具是局域网的，出差了怎么办？
+
+答案是：接 VPN 就行。
+
+Claude Workspace Launcher 的本质只是一个跑在 Mac 上的 HTTP 服务，手机只要能访问到那个内网 IP，一切正常运转。有两种常见方案：
+
+**方案 A：公司 VPN**
+如果公司有内网 VPN，连上之后手机就"虚拟身处"局域网，直接访问 Mac 的局域网 IP（`http://192.168.x.x:8765`）就行，和在家里一模一样。
+
+**方案 B：Tailscale（个人推荐）**
+Tailscale 是基于 WireGuard 的点对点组网工具，Mac 和 iPhone 各装一个 App，登录同一账号，两台设备就形成了一个私有虚拟局域网（100.x.x.x 段）。不管你在哪，手机都能通过 Tailscale 分配的虚拟 IP 访问 Mac 上的服务——延迟低、免配置、流量不走中心服务器。
+
+原理上：Tailscale 用 DERP 中继服务器做打洞协商，一旦打洞成功，数据就走 P2P 加密隧道，不经过任何中间节点。对于 launcher 这种低带宽、高频率轮询的场景，体验非常好。
+
+实际配置：Mac 端 `tailscale up`，iPhone 端装 Tailscale App 登录，然后把书签里的 IP 换成 Mac 的 Tailscale IP（`100.x.x.x:8765`）。完事。
+
+---
+
 ## 附录：架构图 GPT-Image2 生成提示词
 
 如需生成本文的沉浸科技风架构图，使用以下提示词（适用于 GPT-Image2 / DALL-E 3）：
