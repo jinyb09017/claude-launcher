@@ -10,7 +10,7 @@ from datetime import datetime
 from config import load_config, save_config
 from network import check_internet, get_local_ip
 from workspace import (
-    start_session_by_path, kill_session, short_path,
+    start_session_by_path, kill_session, stop_session_by_id, short_path,
     scan_claude_projects, get_project_sessions, get_session_messages,
     delete_session, delete_project_logs,
     _encode_path, _load_session_map,
@@ -87,6 +87,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._api_project_delete(body)
         elif path == "/api/chat":
             self._api_chat(body)
+        elif path == "/api/stop":
+            self._api_stop(body)
         else:
             self._send(404, "text/plain", b"Not found")
 
@@ -263,6 +265,14 @@ class Handler(http.server.BaseHTTPRequestHandler):
         else:
             self._send(500, 'application/json',
                        json.dumps({'error': 'send_failed'}).encode())
+
+    def _api_stop(self, body):
+        session_id = body.get('session_id', '')
+        if not session_id:
+            self._send(400, "text/plain", b"missing session_id")
+            return
+        ok = stop_session_by_id(session_id)
+        self._send(200, "application/json", json.dumps({"ok": ok}).encode())
 
     def _send(self, code, content_type, body):
         self.send_response(code)

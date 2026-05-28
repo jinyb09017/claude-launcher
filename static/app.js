@@ -114,6 +114,7 @@ function _applyMsgSessionState(sessionId, running) {
   const isRunning = !!running;
   _sessRunningById[sessionId] = isRunning;
   document.getElementById('msg-resume-btn').hidden = isRunning;
+  document.getElementById('msg-stop-btn').hidden = !isRunning;
   document.getElementById('msg-input-bar').hidden = !isRunning;
   if (!isRunning) {
     document.getElementById('msg-input').value = '';
@@ -216,7 +217,7 @@ function favCardHTML(p) {
   const disp = escAttr(p.display_name || p.encoded);
   const pathDisplay = p.path
     ? escHTML(p.path)
-    : `<span style="color:var(--red);font-style:italic">路径不存在</span>`;
+    : `<span style="color:var(--red);font-style:italic">${t('card_path_missing')}</span>`;
   const age = _formatAge(p.last_mtime);
   const countClass = p.running ? 'session-count-badge running' : 'session-count-badge';
   return `<div class="project-swipe-wrap" data-encoded="${enc}">
@@ -225,7 +226,7 @@ function favCardHTML(p) {
       <div class="card-left">
         <div class="card-name">${escHTML(p.display_name || '')}</div>
         <div class="card-path">${pathDisplay}</div>
-        <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
+        <div class="card-meta">${t('card_last')}${age}</div>
       </div>
       <div class="card-right">
         <span class="${countClass}">${p.session_count}</span>
@@ -476,11 +477,11 @@ async function _deleteProjectLogs(wrap, encoded) {
     }
     _projects = _projects.filter(p => p.encoded !== encoded);
     renderProjects();
-    showToast('日志已删除', 'info');
+    showToast(t('toast_logs_deleted'), 'info');
   } catch (e) {
     card.classList.remove('deleting', 'swiped');
     wrap.classList.remove('swiped-open');
-    showToast(e.message === 'project_running' ? '运行中的会话不能删除日志' : '删除失败', 'warn');
+    showToast(e.message === 'project_running' ? t('toast_project_running_del') : t('toast_delete_failed'), 'warn');
   }
 }
 
@@ -490,7 +491,7 @@ function projectCardHTML(p, q) {
   const disp = escAttr(p.display_name || p.encoded);
   const pathDisplay = p.path
     ? escHTML(p.path)
-    : `<span style="color:var(--red);font-style:italic">路径不存在</span>`;
+    : `<span style="color:var(--red);font-style:italic">${t('card_path_missing')}</span>`;
   const nameDisplay = q
     ? escHTML(p.display_name || '').replace(
         new RegExp(escRegex(q), 'gi'),
@@ -508,13 +509,13 @@ function projectCardHTML(p, q) {
   return `<div class="project-swipe-wrap">
     <div class="project-swipe-actions">
       <button class="project-pin-btn" data-encoded="${enc}">${p.pinned ? '✓ ' + t('btn_favorite') : t('btn_favorite')}</button>
-      <button class="project-del-btn" data-encoded="${enc}">删除</button>
+      <button class="project-del-btn" data-encoded="${enc}">${t('btn_delete')}</button>
     </div>
     <div class="card project-card" data-encoded="${enc}" data-path="${path}" data-display="${disp}">
       <div class="card-left">
         <div class="card-name">${nameDisplay}</div>
         <div class="card-path">${pathHl}</div>
-        <div class="card-meta">${t('section_recent').includes('天') ? '最近：' : 'Last: '}${age}</div>
+        <div class="card-meta">${t('card_last')}${age}</div>
       </div>
       <div class="card-right">
         ${p.pinned ? '<span class="pin-badge">⭐</span>' : ''}
@@ -527,10 +528,11 @@ function projectCardHTML(p, q) {
 
 function _formatAge(mtime) {
   const diff = (Date.now() / 1000) - mtime;
-  if (diff < 3600)   return Math.floor(diff / 60) + ' 分钟前';
-  if (diff < 86400)  return '今天 ' + new Date(mtime * 1000).toLocaleTimeString('zh', {hour:'2-digit', minute:'2-digit'});
-  if (diff < 172800) return '昨天 ' + new Date(mtime * 1000).toLocaleTimeString('zh', {hour:'2-digit', minute:'2-digit'});
-  return new Date(mtime * 1000).toLocaleDateString('zh', {month:'numeric', day:'numeric'});
+  const locale = _lang === 'zh' ? 'zh' : 'en';
+  if (diff < 3600)   return Math.floor(diff / 60) + t('age_mins_ago');
+  if (diff < 86400)  return t('age_today') + new Date(mtime * 1000).toLocaleTimeString(locale, {hour:'2-digit', minute:'2-digit'});
+  if (diff < 172800) return t('age_yesterday') + new Date(mtime * 1000).toLocaleTimeString(locale, {hour:'2-digit', minute:'2-digit'});
+  return new Date(mtime * 1000).toLocaleDateString(locale, {month:'numeric', day:'numeric'});
 }
 
 // Search
@@ -555,7 +557,7 @@ async function openSessPanel(encoded, path, displayName) {
   _sessDisplayName = displayName;
 
   document.getElementById('sess-title').textContent = displayName;
-  document.getElementById('sess-path').textContent = path || '路径不存在';
+  document.getElementById('sess-path').textContent = path || t('card_path_missing');
   document.getElementById('sess-list').innerHTML = `<div class="empty">${t('empty_loading')}</div>`;
   document.getElementById('sess-panel').classList.add('open');
 
@@ -564,7 +566,7 @@ async function openSessPanel(encoded, path, displayName) {
     const data = await res.json();
     renderSessList(data.sessions, path, displayName);
   } catch {
-    document.getElementById('sess-list').innerHTML = `<div class="empty">加载失败</div>`;
+    document.getElementById('sess-list').innerHTML = `<div class="empty">${t('load_failed')}</div>`;
   }
 }
 
@@ -577,9 +579,9 @@ function renderSessList(sessions, path, displayName) {
     _sessRunningById[s.id] = isLive;
     const dateStr = _formatAge(s.mtime);
     const sizeStr = _formatSize(s.size);
-    const title = s.title || '未命名会话';
+    const title = s.title || t('sess_untitled');
     return `<div class="sess-swipe-wrap" data-id="${escAttr(s.id)}">
-      <div class="sess-del-btn" data-id="${escAttr(s.id)}">删除</div>
+      <div class="sess-del-btn" data-id="${escAttr(s.id)}">${t('btn_delete')}</div>
       <div class="sess-item${isLive ? ' live' : ''}" data-id="${escAttr(s.id)}">
         <div class="sess-header">
           <div class="sess-title">${escHTML(title)}</div>
@@ -589,7 +591,7 @@ function renderSessList(sessions, path, displayName) {
             <span class="sess-size">${sizeStr}</span>
           </div>
         </div>
-        <div class="sess-preview">${escHTML(s.preview || '（无预览）')}</div>
+        <div class="sess-preview">${escHTML(s.preview || t('sess_no_preview'))}</div>
         <div class="sess-footer">
           <span class="sess-tag ${isLive ? 'live' : 'view'}">${t('sess_view')}</span>
         </div>
@@ -716,9 +718,9 @@ async function _doDeleteSession(wrap, sessionId, container) {
   // Delete on server
   try {
     await post('/api/sessions/delete', { encoded: _sessEncoded, session_id: sessionId });
-    showToast('已删除', 'info');
+    showToast(t('toast_deleted'), 'info');
   } catch {
-    showToast('删除失败', 'warn');
+    showToast(t('toast_delete_failed'), 'warn');
   }
 }
 
@@ -763,7 +765,7 @@ async function openMsgPanel(sessionId) {
     _liveLineCount = data.line_count || 0;
     startLivePoll();
   } catch {
-    document.getElementById('msg-list').innerHTML = `<div class="msg-empty">加载失败</div>`;
+    document.getElementById('msg-list').innerHTML = `<div class="msg-empty">${t('load_failed')}</div>`;
   }
 }
 
@@ -845,7 +847,7 @@ function _appendLiveMessages(messages) {
 function renderMessages(messages, sessionId) {
   const shortId = sessionId.slice(0, 8);
   document.getElementById('msg-info').innerHTML =
-    `<strong>${_sessDisplayName}</strong> · ${messages.length} 条消息 · <code style="font-size:11px;color:var(--sub)">${shortId}</code>`;
+    `<strong>${_sessDisplayName}</strong> · ${messages.length} ${t('msg_messages')} · <code style="font-size:11px;color:var(--sub)">${shortId}</code>`;
 
   if (!messages.length) {
     document.getElementById('msg-list').innerHTML = `<div class="msg-empty">${t('msg_empty')}</div>`;
@@ -857,7 +859,7 @@ function renderMessages(messages, sessionId) {
   messages.forEach(m => {
     // Day separator (best-effort — ts field may be absent)
     if (m.ts) {
-      const day = new Date(m.ts).toLocaleDateString('zh');
+      const day = new Date(m.ts).toLocaleDateString(_lang === 'zh' ? 'zh' : 'en');
       if (day !== lastDay) {
         lastDay = day;
         html += `<div class="msg-date-sep"><span>${day}</span></div>`;
@@ -899,7 +901,7 @@ function _updateSendBtn() {
   const input = document.getElementById('msg-input');
   const hasText = input.value.trim().length > 0;
   btn.disabled = _chatLoading || !hasText;
-  btn.textContent = _chatLoading ? '…' : '发送';
+  btn.textContent = _chatLoading ? '…' : t('msg_send');
 }
 
 function _autoResizeInput() {
@@ -969,7 +971,7 @@ async function sendMessage() {
     _scrollMessagesToBottom(true);
 
   } catch (e) {
-    showToast('发送失败: ' + e.message, 'error');
+    showToast(t('msg_send_fail') + ': ' + e.message, 'error');
     input.value = text;
     _autoResizeInput();
     _chatLoading = false;
@@ -983,6 +985,22 @@ document.getElementById('msg-resume-btn').addEventListener('click', async () => 
   switchTab('favorites');
   await doStartByPath(_sessPath, _msgSessionId, true);
   showToast(t('toast_resumed'), 'success');
+});
+
+document.getElementById('msg-stop-btn').addEventListener('click', async () => {
+  if (!_msgSessionId) return;
+  const btn = document.getElementById('msg-stop-btn');
+  btn.disabled = true;
+  try {
+    await post('/api/stop', { session_id: _msgSessionId });
+    _applyMsgSessionState(_msgSessionId, false);
+    stopLivePoll();
+    showToast(t('toast_stopped'), 'success');
+  } catch (e) {
+    showToast(t('toast_stop_failed'), 'warn');
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // ── Path-based session start ───────────────────────────────────

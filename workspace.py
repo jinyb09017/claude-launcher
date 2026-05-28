@@ -56,6 +56,18 @@ def kill_session(path):
             subprocess.run(["tmux", "kill-session", "-t", s], stderr=subprocess.DEVNULL)
 
 
+def stop_session_by_id(session_id: str) -> bool:
+    """Kill the specific tmux session mapped to session_id. Returns True if killed."""
+    m = _load_session_map()
+    tmux_name = m.get(session_id)
+    if not tmux_name:
+        return False
+    result = subprocess.run(
+        ["tmux", "kill-session", "-t", tmux_name], stderr=subprocess.DEVNULL
+    )
+    return result.returncode == 0
+
+
 # ── Claude project discovery ───────────────────────────────────
 
 def _decode_project_path(encoded: str):

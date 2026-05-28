@@ -450,6 +450,7 @@ main {
 }
 .panel-action.primary { background: var(--accent); color: #000; }
 .panel-action.ghost { background: rgba(88,166,255,.1); color: var(--accent); border: 1px solid rgba(88,166,255,.25); }
+.panel-action.danger { background: rgba(255,80,80,.1); color: #ff5050; border: 1px solid rgba(255,80,80,.25); }
 
 .panel-subpath {
   padding: 7px 16px 0; font-size: 12px; color: var(--sub);
